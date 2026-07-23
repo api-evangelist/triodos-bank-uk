@@ -1,0 +1,168 @@
+aid: triodos-bank-uk
+url: https://raw.githubusercontent.com/api-evangelist/triodos-bank-uk/refs/heads/main/apis.yml
+name: Triodos Bank UK
+kind: company
+description: >-
+  Triodos Bank UK Limited is a values-based, sustainability-focused bank
+  headquartered in Bristol, England, and the UK arm of Triodos Bank N.V. (founded
+  1980, Netherlands), one of Europe's leading ethical banks. Ownership of the
+  parent sits with the SAAT foundation (Stichting Administratiekantoor Aandelen
+  Triodos Bank), which issues depositary receipts rather than tradable shares, so
+  Triodos is neither a conventional listed plc nor a customer mutual; it is a
+  certified B Corporation that lends only to organisations delivering positive
+  social, environmental, and cultural impact. Triodos Bank UK Ltd (company no.
+  11379025) is authorised by the Prudential Regulation Authority and regulated by
+  the Financial Conduct Authority and PRA (FRN 817008). As an FCA-authorised
+  ASPSP it meets UK Open Banking / PSD2 obligations, but - unlike the CMA9 - it
+  is a specialist lender that implements the Berlin Group NextGenPSD2 (XS2A)
+  standard rather than the OBIE UK Read/Write standard, publishing a single
+  developer platform at developer.triodos.com covering its UK, Netherlands, and
+  Belgium account holders. Its production XS2A APIs provide Account Information
+  (AIS), Payment Initiation (PIS), and Confirmation of Funds (CoF) services,
+  secured with OAuth2/OpenID Connect authorization, mutual-TLS client
+  authentication, eIDAS/QWAC certificates, and PSD2 strong customer
+  authentication, with a full sandbox for onboarding and testing.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-23'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Financial Services
+- Banking
+- Open Banking
+- PSD2
+- XS2A
+- Berlin Group
+- United Kingdom
+- Payments
+- Account Information
+- Confirmation of Funds
+- Ethical Banking
+- Sustainable Finance
+- Specialist Lender
+created: '2026-07-23'
+modified: '2026-07-23'
+specificationVersion: '0.19'
+apis:
+- aid: triodos-bank-uk:triodos-account-information-api
+  name: Triodos Account Information Service (AIS) API
+  description: >-
+    The XS2A Account Information Service (AIS) from Triodos Bank UK - 13
+    operation(s) for consented, secure read access to Triodos payment account
+    details, balances, and transaction history under the Berlin Group
+    NextGenPSD2 standard.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Account Information Service
+  - AIS
+  - Open Banking
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-xs2a-openapi.json
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-payment-initiation-api
+  name: Triodos Payment Initiation Service (PIS) API
+  description: >-
+    The XS2A Payment Initiation Service (PIS) from Triodos Bank UK - 66
+    operation(s) for initiating, authorising, and tracking SEPA, cross-border,
+    UK domestic, and periodic (recurring) payments from Triodos accounts under
+    the Berlin Group NextGenPSD2 standard.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Payment Initiation Service
+  - PIS
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-xs2a-openapi.json
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-confirmation-of-funds-api
+  name: Triodos Confirmation of Funds Service (CoF) API
+  description: >-
+    The XS2A Confirmation of Funds Service (CoF/CBPII) from Triodos Bank UK - 9
+    operation(s) for card-based payment instrument issuers to check the
+    availability of funds on a Triodos account under the Berlin Group
+    NextGenPSD2 standard.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Confirmation of Funds Service
+  - CoF
+  - CBPII
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-xs2a-openapi.json
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-authorization-api
+  name: Triodos XS2A Authorization (OAuth2/OIDC) API
+  description: >-
+    The Triodos Auth service - 8 operation(s) implementing OAuth2 / OpenID
+    Connect for XS2A third-party providers, including dynamic client
+    registration, OpenID configuration discovery, authorization, token issuance
+    and revocation, and UserInfo, used to obtain PSD2-scoped access to the AIS,
+    PIS, and CoF APIs.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api.triodos.com/auth
+  tags:
+  - Authorization
+  - OAuth2
+  - OpenID Connect
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-auth-openapi.json
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+common:
+- type: Website
+  url: https://www.triodos.co.uk/
+- type: DeveloperPortal
+  url: https://developer.triodos.com/
+- type: Documentation
+  url: https://developer.triodos.com/docs/getting-started
+- type: GettingStarted
+  url: https://developer.triodos.com/docs/getting-started
+- type: OpenBanking
+  url: https://www.triodos.co.uk/open-banking-developers
+- type: ChangeLog
+  url: https://developer.triodos.com/changelog
+- type: Support
+  url: https://developer.triodos.com/docs/support
+- type: Blog
+  url: https://www.triodos.co.uk/blog
+- type: LinkedIn
+  url: https://www.linkedin.com/company/triodos-bank
+- type: PrivacyPolicy
+  url: https://www.triodos.co.uk/privacy-statement
+- type: LLMsTxt
+  url: https://developer.triodos.com/llms.txt
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,117 @@
+aid: triodos-bank-uk
+name: Triodos Bank UK
+review:
+  question: >-
+    Does Triodos Bank UK expose a real, documented public API surface, and does
+    it implement the OBIE UK Read/Write standard or the Berlin Group XS2A
+    standard? Is a public OBIE Open Data (ATM/branch/product) endpoint confirmed?
+  answer: true
+  date: '2026-07-23'
+  reviewer: API Evangelist
+findings:
+  summary: |
+    Triodos Bank UK Ltd operates a real, live developer portal at
+    developer.triodos.com ("Triodos Bank XS2A service", HTTP 200) covering its
+    UK, Netherlands, and Belgium account holders. Triodos is an FCA/PRA
+    authorised ASPSP (FRN 817008) but is NOT one of the CMA9; as a specialist,
+    values-based lender it satisfies its PSD2 access-to-account obligation using
+    the Berlin Group NextGenPSD2 (XS2A) standard - NOT the OBIE UK Read/Write
+    standard. Two real OpenAPI 3.0.1 documents are published and were harvested
+    verbatim: the XS2A BG service spec (63 paths; tags Account Information
+    Service, Payment Initiation Service, Confirmation of Funds Service, Extended
+    Account Information Service, Initial Access Token Service) and the Auth
+    service spec (OAuth2/OpenID Connect: client registration, configuration,
+    authorization, token, token revocation, UserInfo). These are
+    bank-proprietary contracts conformant to the Berlin Group standard, not the
+    shared OBIE spec. Production API version reported by
+    https://api.triodos.com/xs2a-bg/version is 26.30.01 (OpenAPI info.version
+    1.1). Authentication is FAPI-style: OAuth2/OIDC authorization, mutual-TLS
+    client authentication with eIDAS/QWAC certificates, and PSD2 strong customer
+    authentication (SCA). No public, unauthenticated OBIE Open Data endpoint
+    (ATMs/branches/PCA/BCA) was confirmed for Triodos - guessed OBIE Open Data
+    hosts on triodos.co.uk and api.triodos.co.uk returned 404/no-connection,
+    consistent with Triodos not being a CMA9 bank subject to the Open Data remedy.
+  standard: Berlin Group NextGenPSD2 (XS2A)
+  isCMA9: false
+  obieReadWriteConformance: false
+  openDataConfirmed: false
+  openDataBaseURL: ''
+  specProvenance: >-
+    Bank-proprietary OpenAPI contracts conformant to the Berlin Group
+    NextGenPSD2 standard (Triodos XS2A BG service v1.1 + Triodos Auth service
+    v1.0), not the shared OBIE Read/Write or OBIE Open Data specifications.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api-ma.triodos.com/xs2a-bg
+      documented: true
+      note: >-
+        Production mutual-TLS (QWAC/eIDAS) endpoint for AIS, PIS, and CoF
+        resource calls.
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.triodos.com/auth
+      documented: true
+      note: >-
+        Production OAuth2/OpenID Connect authorization, token, and registration
+        endpoints (client-initiated, non-mTLS host api.triodos.com).
+    - protocol: REST
+      scheme: https
+      baseURL: https://xs2a-sandbox.triodos.com/xs2a-bg
+      documented: true
+      note: Sandbox test environment (OpenAPI server URL) for onboarding and testing.
+  authentication:
+    - OAuth2 / OpenID Connect authorization
+    - Mutual-TLS client authentication (eIDAS / QWAC certificates)
+    - PSD2 Strong Customer Authentication (SCA)
+    - Dynamic client registration
+  endpointsConfirmed:
+    - GET  https://api.triodos.com/xs2a-bg/version  (returns 26.30.01)
+    - GET  https://api.triodos.com/xs2a-bg/openapi.json  (200, OpenAPI 3.0.1)
+    - GET  https://api.triodos.com/auth/openapi.json  (200, OpenAPI 3.0.1)
+    - GET  https://xs2a-sandbox.triodos.com/xs2a-bg/openapi.json  (200)
+    - GET  https://xs2a-sandbox.triodos.com/auth/openapi.json  (200)
+sources:
+  - url: https://developer.triodos.com/
+    type: DeveloperPortal
+    status: 200
+    note: Triodos Bank XS2A service developer portal.
+  - url: https://developer.triodos.com/docs/getting-started
+    type: Documentation
+    status: 200
+    note: Getting Started; confirms XS2A, AIS/PIS/CoF, UK/NL/BE coverage.
+  - url: https://developer.triodos.com/docs/sandbox-and-production-environments
+    type: Documentation
+    status: 200
+    note: >-
+      Lists sandbox (xs2a-sandbox.triodos.com) and production (api.triodos.com /
+      api-ma.triodos.com) base URLs and the openapi.json spec locations.
+  - url: https://api.triodos.com/xs2a-bg/openapi.json
+    type: OpenAPI
+    status: 200
+    note: Harvested verbatim to openapi/triodos-bank-uk-xs2a-openapi.json.
+  - url: https://api.triodos.com/auth/openapi.json
+    type: OpenAPI
+    status: 200
+    note: Harvested verbatim to openapi/triodos-bank-uk-auth-openapi.json.
+  - url: https://www.triodos.co.uk/open-banking-developers
+    type: Documentation
+    status: 200
+    note: Triodos UK Open Banking for developers landing page.
+  - url: https://developer.triodos.com/llms.txt
+    type: LLMsTxt
+    status: 200
+    note: AI-agent index of docs pages and OpenAPI endpoints.
+actions:
+  openapiHarvested: true
+  openapiPaths:
+    - openapi/triodos-bank-uk-xs2a-openapi.json
+    - openapi/triodos-bank-uk-auth-openapi.json
+  apisYmlUpdated: true
+  reason: >-
+    Captured Triodos Bank UK identity plus its real XS2A developer surface. Both
+    published OpenAPI 3.0.1 specs were harvested verbatim and represented as four
+    apis[] entries (AIS, PIS, CoF, and the OAuth2/OIDC Authorization service).
+    OBIE Open Data and OBIE Read/Write were deliberately NOT fabricated because
+    Triodos is not a CMA9 bank and uses the Berlin Group XS2A standard; no live
+    Open Data endpoint could be confirmed.
