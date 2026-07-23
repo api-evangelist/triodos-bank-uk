@@ -1,0 +1,62 @@
+generated: '2026-07-23'
+method: derived
+source: openapi/ + https://developer.triodos.com/docs
+searched:
+- https://developer.triodos.com/docs/authorisation
+- https://developer.triodos.com/docs/signatures
+- https://www.triodos.co.uk/open-banking-developers
+standards:
+- id: psd2
+  conforms: true
+  evidence: FCA-authorised ASPSP implementing PSD2 XS2A access-to-account obligations
+- id: berlin-group-nextgenpsd2
+  conforms: true
+  version: v1.3.6
+  evidence: OpenAPI titled "Triodos XS2A BG service"; TppMessages error model; consent/authorisation sub-resource flows
+- id: oauth2
+  conforms: true
+  evidence: Authorization Code Flow token/authorize/revoke endpoints documented
+- id: oidc
+  conforms: true
+  evidence: OpenID Connect Authorization Code Flow; per-tenant .well-known/openid-configuration; UserInfo endpoint
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge/code_challenge_method S256 required on the authorization request
+- id: rfc7009-token-revocation
+  conforms: true
+  evidence: POST /{tenant}/v1/token/revoke (tokenRevocation)
+- id: oauth2-dynamic-client-registration
+  conforms: true
+  evidence: POST /{tenant}/v1/registration gated by an Initial Access Token
+- id: http-message-signatures
+  conforms: true
+  evidence: draft-cavage-http-signatures-10 mandated (Digest + Signature headers, rsa-sha256/rsa-sha512)
+- id: eidas
+  conforms: true
+  evidence: eIDAS QWAC (mutual-TLS) + QSEALC (message signing) certificates required in production
+- id: mutual-tls
+  conforms: true
+  evidence: production data host api-ma.triodos.com requires mTLS
+- id: sca
+  conforms: true
+  evidence: PSD2 Strong Customer Authentication via OAuth2 SCA Approach (Implicit Start)
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: https://www.triodos.co.uk/.well-known/security.txt (Contact, Expires)
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: uses Berlin Group TppMessages error model, not application/problem+json
+- id: fapi
+  conforms: false
+  evidence: no published FAPI certification (Berlin Group profile, not OBIE/FAPI-RW)
+- id: fhir-r4
+  conforms: false
+- id: scim
+  conforms: false
+compliance:
+  regulated: true
+  regulators: [FCA, PRA]
+  frn: '817008'
+  role: PSD2 ASPSP (Account Servicing Payment Service Provider)
+  b_corp: true
+  published_at: https://www.triodos.co.uk/open-banking-developers

@@ -1,0 +1,18 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Triodos XS2A BG service
+  version: 1.0.0
+extends: openapi/triodos-bank-uk-xs2a-openapi.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: triodos-bank-uk
+    x-apievangelist-standard: Berlin Group NextGenPSD2 XS2A v1.3.6
+    x-apievangelist-auth: authentication/triodos-bank-uk-authentication.yml
+    x-apievangelist-errors: errors/triodos-bank-uk-problem-types.yml
+    x-apievangelist-conventions: conventions/triodos-bank-uk-conventions.yml
+    x-apievangelist-sandbox: https://xs2a-sandbox.triodos.com
+- target: $.info
+  update:
+    x-apievangelist-idempotency-header: X-Request-ID
+    x-apievangelist-error-model: berlin-group-tpp-messages

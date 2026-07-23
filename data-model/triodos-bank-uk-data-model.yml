@@ -1,0 +1,51 @@
+generated: '2026-07-23'
+method: derived
+source: openapi/triodos-bank-uk-xs2a-openapi.json
+standard: Berlin Group NextGenPSD2 XS2A data model
+entities:
+- name: Account
+  schema: Xs2aAccount
+  key: account-id (resourceId / IBAN)
+  description: A PSU payment or savings account (Xs2aAccountResponse / Xs2aAccountsResponse).
+- name: Balance
+  schema: Xs2aBalance
+  description: Balance information for an account (Xs2aBalancesResponse).
+- name: Transaction
+  schema: Xs2aTransaction
+  key: transactionId
+  description: A booked/pending transaction on an account (Xs2aTransactionsResponse); paged via edge token.
+- name: Consent
+  schema: Xs2aConsentRequest
+  key: consentId (resource-id)
+  description: An AIS access consent covering listed accounts (Xs2aAccess).
+- name: ConfirmationOfFundsConsent
+  schema: Xs2aConfirmationOfFundsConsentRequest
+  key: consentId (resource-id)
+  description: A CBPII/PIIS consent authorising funds-availability checks.
+- name: Payment
+  schema: Xs2aPaymentRequestResponse
+  key: paymentId (resource-id)
+  description: A payment initiation (SEPA, cross-border, UK domestic, bulk, periodic).
+- name: Authorisation
+  schema: Xs2aAuthorisationRequestResponse
+  key: authorisation-id
+  description: An SCA authorisation sub-resource of a payment or consent.
+- name: ConfirmationOfFunds
+  schema: Xs2aConfirmationOfFundsRequest
+  description: A funds-availability request/response (Xs2aConfirmationOfFundsResponse).
+- name: InitialAccessToken
+  schema: Xs2aInitialAccessTokenResponse
+  description: Onboarding token issued after validating the TPP eIDAS certificate.
+relationships:
+- {from: Account, type: has_many, to: Balance, via: account-id}
+- {from: Account, type: has_many, to: Transaction, via: account-id}
+- {from: Consent, type: has_many, to: Account, via: access (Xs2aAccess account references)}
+- {from: Consent, type: has_many, to: Authorisation, via: consentId}
+- {from: ConfirmationOfFundsConsent, type: has_many, to: Authorisation, via: consentId}
+- {from: Payment, type: has_many, to: Authorisation, via: paymentId}
+- {from: Payment, type: belongs_to, to: Account, via: debtorAccount (Xs2aAccountReference)}
+- {from: Transaction, type: belongs_to, to: Account, via: account-id}
+- {from: ConfirmationOfFunds, type: belongs_to, to: Account, via: account (Xs2aAccountReference)}
+id_prefixes:
+  scopes: 'AIS:<consentId>, PIS:<paymentId>, PIIS:<consentId>'
+  note: resource ids are UUIDs; scope binds an access token to one consent or payment resource.

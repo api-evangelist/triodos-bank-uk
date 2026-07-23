@@ -1,0 +1,58 @@
+generated: '2026-07-23'
+method: searched
+source: https://developer.triodos.com/docs
+docs:
+- https://developer.triodos.com/docs/signatures
+- https://developer.triodos.com/docs/authorisation
+- https://developer.triodos.com/docs/sandbox-and-production-environments
+standard: Berlin Group NextGenPSD2 XS2A Framework v1.3.6
+authentication:
+  style: oauth2-oidc + eidas-mtls + http-message-signature
+  ref: authentication/triodos-bank-uk-authentication.yml
+idempotency:
+  supported: true
+  header: X-Request-ID
+  scope: per-request unique UUID; on payment initiation the same X-Request-ID identifies the same logical request (Berlin Group idempotent request handling)
+  format: UUID
+  also_signed: X-Request-ID is one of the two mandatory signed headers (digest x-request-id)
+pagination:
+  style: link-based / edge-token
+  transactions: >-
+    Transaction history is paged via HATEOAS _links (next) on the transactions
+    response. An edge-token (Xs2aTransactionSearchCriteriaEdgeToken) is passed
+    back to the transactions endpoint to continue paging. The dedicated
+    getTransactionsPage endpoint is deprecated in favour of the edge token.
+  deprecated_operation: getTransactionsPage
+tracing:
+  request_id_header: X-Request-ID
+  echoed: X-Request-ID is used to correlate request and response
+versioning:
+  scheme: uri-path
+  versions: [v1, v2]
+  note: v2 introduced for Confirmation of Funds consents (PIIS) and savings accounts; Berlin Group framework version is v1.3.6
+  discovery: per-tenant OIDC configuration document
+error_envelope:
+  format: berlin-group-tpp-messages
+  media_type: application/json
+  shape: '{ "tppMessages": [ { code, category, text } ] }'
+  ref: errors/triodos-bank-uk-problem-types.yml
+rate_limiting:
+  signal: HTTP 429 with message "TooManyRequests"
+  parallelism: an organisation may not run too many requests in parallel
+  consent_frequency: recurring AIS consent limited to 4 accesses/day in unattended mode (no PSU-IP-Address header); unlimited in attended mode
+required_headers:
+  - {name: X-Request-ID, purpose: unique request id / idempotency / tracing (mandatory, signed)}
+  - {name: Digest, purpose: 'SHA-256= message digest of the body (mandatory, signed)'}
+  - {name: Signature, purpose: HTTP message signature over 'digest x-request-id'}
+  - {name: TPP-Signature-Certificate, purpose: base64 eIDAS QSEALC certificate}
+  - {name: PSU-IP-Address, purpose: PSU IP for attended access (its absence marks unattended access)}
+  - {name: TPP-Redirect-URI, purpose: registered redirect URI to start the SCA authorisation}
+consent_models:
+  - detailed: TPP supplies the PSU account number(s) up front
+  - bank-offered: PSU selects the account during SCA; single-account only
+cross_links:
+  errors: errors/triodos-bank-uk-problem-types.yml
+  lifecycle: lifecycle/triodos-bank-uk-lifecycle.yml
+  authentication: authentication/triodos-bank-uk-authentication.yml
+  scopes: scopes/triodos-bank-uk-scopes.yml
+  sandbox: sandbox/triodos-bank-uk-sandbox.yml

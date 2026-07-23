@@ -1,0 +1,125 @@
+# Triodos Bank XS2A service Documentation
+
+> Documentation for Triodos Bank XS2A service
+
+## Guides
+- [Getting Started](https://developer.triodos.com/docs/getting-started.md)
+- [Sandbox and Production](https://developer.triodos.com/docs/sandbox-and-production-environments.md)
+- [Signatures](https://developer.triodos.com/docs/signatures.md): How to generate a digital signature
+- [Support](https://developer.triodos.com/docs/support.md)
+- [Authorisation](https://developer.triodos.com/docs/authorisation.md): Describes the authorisation process
+- [Account Information Service](https://developer.triodos.com/docs/account-information-service.md)
+- [Extended Account Information Service](https://developer.triodos.com/docs/extended-account-information-service.md): AIS for Savings Accounts
+- [Payment Initiation Service](https://developer.triodos.com/docs/payment-initiation-service.md)
+- [Confirmation of Funds Service](https://developer.triodos.com/docs/confirmation-of-funds-service-1.md)
+- [FAQ](https://developer.triodos.com/docs/faq.md)
+
+## API Reference
+- [Register client](https://developer.triodos.com/reference/authorizepost_1.md): The Client Registration Endpoint is an OAuth 2.0 Protected Resource through which a new Client registration can be requested. The OpenID Provider requires an Initial Access Token that is provisioned in the service the client wants to access, to restrict registration requests to only authorized Clients or developers.
+- [Get configuration](https://developer.triodos.com/reference/configuration.md): The Configuration Endpoint allows the OpenID Provider's configuration information to be retrieved.
+- [Authorize end-user](https://developer.triodos.com/reference/authorizeget.md): The Authorization Endpoint performs Authentication of the End-User. This is done by sending the User Agent to the Authorization Server's Authorization Endpoint for Authentication and Authorization, using request parameters defined by OAuth 2.0 and additional parameters and parameter values defined by OpenID Connect.
+- [Authorize end-user](https://developer.triodos.com/reference/authorizepost.md): The Authorization Endpoint performs Authentication of the End-User. This is done by sending the User Agent to the Authorization Server's Authorization Endpoint for Authentication and Authorization, using request parameters defined by OAuth 2.0 and additional parameters and parameter values defined by OpenID Connect.
+- [Get token](https://developer.triodos.com/reference/token.md): To obtain an Access Token and a Refresh Token, the RP (Client) sends a Token Request to the Token Endpoint to obtain a Token Response, as described in Section 3.2 of OAuth 2.0.
+- [Revoke token](https://developer.triodos.com/reference/tokenrevocation.md): The client requests the revocation of a particular token by making an HTTP POST request to the token revocation endpoint URL. See RFC7009 for more information.
+- [Get UserInfo](https://developer.triodos.com/reference/doget.md): The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the authenticated End-User. To obtain the requested Claims about the End-User, the Client makes a request to the UserInfo Endpoint using an Access Token obtained through OpenID Connect Authentication. These Claims are normally represented by a JSON object that contains a collection of name and value pairs for the Claims.
+- [Get UserInfo](https://developer.triodos.com/reference/dopost.md): The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the authenticated End-User. To obtain the requested Claims about the End-User, the Client makes a request to the UserInfo Endpoint using an Access Token obtained through OpenID Connect Authentication. These Claims are normally represented by a JSON object that contains a collection of name and value pairs for the Claims.
+- [Get authorisations](https://developer.triodos.com/reference/getauthorisations.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createauthorisation.md): Creates a payment authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getauthorisation.md): Checks the SCA status of an authorisation sub-resource.
+- [Submit payment authorisation](https://developer.triodos.com/reference/submitauthorisation.md): Submits an access token to authorise a payment initiation.
+- [Get cancellation authorisations](https://developer.triodos.com/reference/getcancellationauthorisations.md): Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+- [Create cancellation authorisation](https://developer.triodos.com/reference/createcancellationauthorisation.md): Creates a payment cancellation authorisation sub-resource.
+- [Get cancellation authorisation status](https://developer.triodos.com/reference/getcancellationauthorisation.md): Checks the SCA status of a cancellation authorisation sub-resource.
+- [Update payment cancellation authorisation with access token](https://developer.triodos.com/reference/submitcancellationauthorisation.md): Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+- [Cancel payment](https://developer.triodos.com/reference/deletepayment.md): If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+- [Get payment status](https://developer.triodos.com/reference/getstatus.md): Can check the status of a payment initiation.
+- [Initiate Sepa Bulk Payment](https://developer.triodos.com/reference/initiatesepabulkpayment.md): Creates a Sepa bulk payment initiation request and corresponding authorisation sub-resource.
+- [Get authorisations](https://developer.triodos.com/reference/getauthorisations_1.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createauthorisation_1.md): Creates a payment authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getauthorisation_1.md): Checks the SCA status of an authorisation sub-resource.
+- [Submit payment authorisation](https://developer.triodos.com/reference/submitauthorisation_1.md): Submits an access token to authorise a payment initiation.
+- [Get cancellation authorisations](https://developer.triodos.com/reference/getcancellationauthorisations_1.md): Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+- [Create cancellation authorisation](https://developer.triodos.com/reference/createcancellationauthorisation_1.md): Creates a payment cancellation authorisation sub-resource.
+- [Get cancellation authorisation status](https://developer.triodos.com/reference/getcancellationauthorisation_1.md): Checks the SCA status of a cancellation authorisation sub-resource.
+- [Update payment cancellation authorisation with access token](https://developer.triodos.com/reference/submitcancellationauthorisation_1.md): Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+- [Cancel payment](https://developer.triodos.com/reference/deletepayment_1.md): If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+- [Get payment status](https://developer.triodos.com/reference/getstatus_1.md): Can check the status of a payment initiation.
+- [Initiate Cross Border payment](https://developer.triodos.com/reference/initiatecrossborderpayment.md): Creates a Cross Border payment initiation request and corresponding authorisation sub-resource.
+- [Get authorisations](https://developer.triodos.com/reference/getauthorisations_2.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createauthorisation_2.md): Creates a payment authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getauthorisation_2.md): Checks the SCA status of an authorisation sub-resource.
+- [Submit payment authorisation](https://developer.triodos.com/reference/submitauthorisation_2.md): Submits an access token to authorise a payment initiation.
+- [Get cancellation authorisations](https://developer.triodos.com/reference/getcancellationauthorisations_2.md): Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+- [Create cancellation authorisation](https://developer.triodos.com/reference/createcancellationauthorisation_2.md): Creates a payment cancellation authorisation sub-resource.
+- [Get cancellation authorisation status](https://developer.triodos.com/reference/getcancellationauthorisation_2.md): Checks the SCA status of a cancellation authorisation sub-resource.
+- [Update payment cancellation authorisation with access token](https://developer.triodos.com/reference/submitcancellationauthorisation_2.md): Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+- [Cancel payment](https://developer.triodos.com/reference/deletepayment_2.md): If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+- [Get payment status](https://developer.triodos.com/reference/getstatus_2.md): Can check the status of a payment initiation.
+- [Initiate Sepa payment](https://developer.triodos.com/reference/initiatesepapayment.md): Creates a Sepa payment initiation request and corresponding authorisation sub-resource.
+- [Get authorisations](https://developer.triodos.com/reference/getauthorisations_3.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createauthorisation_3.md): Creates a payment authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getauthorisation_3.md): Checks the SCA status of an authorisation sub-resource.
+- [Submit payment authorisation](https://developer.triodos.com/reference/submitauthorisation_3.md): Submits an access token to authorise a payment initiation.
+- [Get cancellation authorisations](https://developer.triodos.com/reference/getcancellationauthorisations_3.md): Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+- [Create cancellation authorisation](https://developer.triodos.com/reference/createcancellationauthorisation_3.md): Creates a payment cancellation authorisation sub-resource.
+- [Get cancellation authorisation status](https://developer.triodos.com/reference/getcancellationauthorisation_3.md): Checks the SCA status of a cancellation authorisation sub-resource.
+- [Update payment cancellation authorisation with access token](https://developer.triodos.com/reference/submitcancellationauthorisation_3.md): Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+- [Cancel payment](https://developer.triodos.com/reference/deletepayment_3.md): If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+- [Get payment status](https://developer.triodos.com/reference/getstatus_3.md): Can check the status of a payment initiation.
+- [Initiate UK Domestic payment](https://developer.triodos.com/reference/initiateukdomesticpayment.md): Creates a UK Domestic payment initiation request and corresponding authorisation sub-resource.
+- [Get authorisations](https://developer.triodos.com/reference/getauthorisations_4.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createauthorisation_4.md): Creates a payment authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getauthorisation_4.md): Checks the SCA status of an authorisation sub-resource.
+- [Submit payment authorisation](https://developer.triodos.com/reference/submitauthorisation_4.md): Submits an access token to authorise a payment initiation.
+- [Get cancellation authorisations](https://developer.triodos.com/reference/getcancellationauthorisations_4.md): Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+- [Create cancellation authorisation](https://developer.triodos.com/reference/createcancellationauthorisation_4.md): Creates a payment cancellation authorisation sub-resource.
+- [Get cancellation authorisation status](https://developer.triodos.com/reference/getcancellationauthorisation_4.md): Checks the SCA status of a cancellation authorisation sub-resource.
+- [Update payment cancellation authorisation with access token](https://developer.triodos.com/reference/submitcancellationauthorisation_4.md): Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+- [Cancel payment](https://developer.triodos.com/reference/deletepayment_4.md): If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+- [Get payment status](https://developer.triodos.com/reference/getstatus_4.md): Can check the status of a payment initiation.
+- [Initiate Sepa Periodic Payment](https://developer.triodos.com/reference/initiatesepaperiodicpayment.md): Creates a Sepa periodic payment initiation request and corresponding authorisation sub-resource.
+- [Get authorisations](https://developer.triodos.com/reference/getauthorisations_5.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createauthorisation_5.md): Creates a payment authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getauthorisation_5.md): Checks the SCA status of an authorisation sub-resource.
+- [Submit payment authorisation](https://developer.triodos.com/reference/submitauthorisation_5.md): Submits an access token to authorise a payment initiation.
+- [Get cancellation authorisations](https://developer.triodos.com/reference/getcancellationauthorisations_5.md): Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+- [Create cancellation authorisation](https://developer.triodos.com/reference/createcancellationauthorisation_5.md): Creates a payment cancellation authorisation sub-resource.
+- [Get cancellation authorisation status](https://developer.triodos.com/reference/getcancellationauthorisation_5.md): Checks the SCA status of a cancellation authorisation sub-resource.
+- [Update payment cancellation authorisation with access token](https://developer.triodos.com/reference/submitcancellationauthorisation_5.md): Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+- [Cancel payment](https://developer.triodos.com/reference/deletepayment_5.md): If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+- [Get payment status](https://developer.triodos.com/reference/getstatus_5.md): Can check the status of a payment initiation.
+- [Initiate UK Domestic Periodic Payment](https://developer.triodos.com/reference/initiateukdomesticperiodicpayment.md): Creates a UK Domestic periodic payment initiation request and corresponding authorisation sub-resource.
+- [Get account](https://developer.triodos.com/reference/getaccount.md): Reads details about an account, with balances where required. It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system. The addressed details of this account depends then on the stored consent addressed by consentId, respectively the OAuth2 access token.
+- [Get accounts](https://developer.triodos.com/reference/getaccounts.md): Reads a list of bank accounts, with balances where required. It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system. The addressed list of accounts depends then on the PSU ID and the stored consent addressed by consentId, respectively the OAuth2 access token.
+- [Get account balances](https://developer.triodos.com/reference/getbalances.md): Reads account data from a given account addressed by "account-id".
+- [Get account transactions](https://developer.triodos.com/reference/gettransactions.md): Reads account data from a given account addressed by "account-id".
+- [Paginate account transactions (deprecated, pass edge token to transactions endpoint instead)](https://developer.triodos.com/reference/gettransactionspage.md): Reads account data from a given account addressed by "account-id".
+- [Get authorisations](https://developer.triodos.com/reference/getaisauthorisations.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createaisauthorisation.md): Creates a consent authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getaisauthorisationstatus.md): Checks the SCA status of an authorisation sub-resource.
+- [Update consent authorisation with access token](https://developer.triodos.com/reference/submitaisauthorisation.md): Updates the account information consent authorisation with an access token. If the access token has sufficient privileges, the consent will be authorized
+- [Get consent](https://developer.triodos.com/reference/getaisconsent.md): Returns the content of an account information consent object. This is returning the data for the TPP especially in cases, where the consent was directly managed between ASPSP and PSU e.g. in a re-direct SCA Approach.
+- [Delete consent](https://developer.triodos.com/reference/deleteaisconsent.md): Deletes a given consent.
+- [Get consent status](https://developer.triodos.com/reference/getaisconsentstatus.md): Check the status of an account information consent resource.
+- [Register consent](https://developer.triodos.com/reference/registerconsentrequest.md): Creates an account information consent resource at the ASPSP regarding access to accounts specified in this request.
+- [Confirmation of funds](https://developer.triodos.com/reference/confirmfundsavailable.md): Creates a confirmation of funds request at the ASPSP.
+- [Get authorisations](https://developer.triodos.com/reference/getpiisauthorisations.md): Will deliver an array of resource ids of all generated authorisation sub-resources.
+- [Create authorisation](https://developer.triodos.com/reference/createpiisauthorisation.md): Creates a consent authorisation sub-resource.
+- [Get authorisation status](https://developer.triodos.com/reference/getpiisauthorisationstatus.md): Checks the SCA status of an authorisation sub-resource.
+- [Update consent authorisation with access token](https://developer.triodos.com/reference/submitpiisauthorisation.md): Updates the confirmation of funds consent authorisation with an access token. If the access token has sufficient privileges, the consent will be authorized
+- [Get consent](https://developer.triodos.com/reference/getpiisconsent.md): Returns the content of a confirmation of funds consent object. This is returning the data for the TPP especially in cases, where the consent was directly managed between ASPSP and PSU e.g. in a re-direct SCA Approach.
+- [Delete consent](https://developer.triodos.com/reference/deletepiisconsent.md): Deletes a given consent.
+- [Get consent status](https://developer.triodos.com/reference/getpiisconsentstatus.md): Check the status of a confirmation of funds consent resource.
+- [Register consent](https://developer.triodos.com/reference/registerconsentrequest_1.md): Creates a confirmation of funds consent resource at the ASPSP regarding access to accounts specified in this request.
+- [Get initial access token](https://developer.triodos.com/reference/initialaccesstoken.md): Validates the TPP's X.509 EIDAS certificate and returns an initial access token to continue onboarding procedure.
+- [Read savings account details](https://developer.triodos.com/reference/getaccount_1.md): Reads details about a savings account, with balances where required.       It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system.       The addressed details of this account depends then on the stored consent addressed by consentId, respectively the OAuth2 access token.
+- [Get accounts](https://developer.triodos.com/reference/getaccounts_1.md): Reads a list of savings accounts, with balances where required. It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system. The addressed list of accounts depends then on the PSU ID and the stored consent addressed by consentId, respectively the OAuth2 access token.
+- [Get savings account balances](https://developer.triodos.com/reference/getbalances_1.md): Reads savings account data from a given savings account addressed by "account-id".
+- [Get savings account transactions](https://developer.triodos.com/reference/gettransactions_1.md): Reads savings account data from a given saving account addressed by "account-id".
+
+## Changelog
+- [Allowed frequency of AIS consent requests](https://developer.triodos.com/changelog/allowed-frequency-of-ais-consent-requests.md)
+- [Support for Berlin Group v1.3.6 and minor fixes](https://developer.triodos.com/changelog/support-for-berlin-group-v136-and-minor-fixes.md)
+- [Support for Bank Offered Consent](https://developer.triodos.com/changelog/support-for-bank-offered-consent.md)
+- [Bank transactions codes and organization identifier](https://developer.triodos.com/changelog/bank-transactions-codes-and-organization-identifier.md)
+- [Update: fixes](https://developer.triodos.com/changelog/update-fixes.md)

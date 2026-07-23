@@ -1,0 +1,74 @@
+generated: '2026-07-23'
+method: derived
+source: openapi/triodos-bank-uk-xs2a-openapi.json
+searched: https://developer.triodos.com/docs/authorisation
+format: berlin-group-tpp-messages
+notes: >-
+  Triodos XS2A does not use RFC 9457 problem+json. Errors follow the Berlin Group
+  NextGenPSD2 error model: an application/json body { "tppMessages": [ { code,
+  category, text } ] } where code is drawn from the standard TppMessage code
+  enumeration. HTTP status distribution across the 63 XS2A paths: 400 x91,
+  403 x75, 401 x20, 404 x13, 429 x5, 501 x1.
+envelope:
+  media_type: application/json
+  schema: '#/components/schemas/TppMessages'
+  shape: '{ "tppMessages": [ { "code": <TppMessage code>, "category": <string>, "text": <string> } ] }'
+http_statuses:
+- status: 400
+  meaning: Format / consistency error (e.g. ConsentID invalid, AccountID invalid).
+- status: 401
+  meaning: TLS certificate missing/invalid or invalid organizationIdentifier; token missing/invalid.
+- status: 403
+  meaning: Consent/resource not found for this TPP, or insufficient privileges.
+- status: 404
+  meaning: Addressed resource (AccountID, resource-id) not found.
+- status: 429
+  meaning: Too many requests - exceeds the consent FrequencyPerDay or parallel-request limit (TooManyRequests).
+- status: 501
+  meaning: Requested function not supported / not implemented.
+problem_codes:
+- {code: CERTIFICATE_INVALID, category: ERROR, remediation: Provide a valid eIDAS QWAC/QSEALC certificate.}
+- {code: CERTIFICATE_EXPIRED, category: ERROR, remediation: Renew the expired eIDAS certificate.}
+- {code: CERTIFICATE_BLOCKED, category: ERROR}
+- {code: CERTIFICATE_REVOKED, category: ERROR}
+- {code: CERTIFICATE_MISSING, category: ERROR, remediation: Present the TPP certificate in the mutual-TLS handshake / TPP-Signature-Certificate header.}
+- {code: SIGNATURE_INVALID, category: ERROR, remediation: Recompute the HTTP message signature over 'digest x-request-id' with rsa-sha256/rsa-sha512.}
+- {code: SIGNATURE_MISSING, category: ERROR}
+- {code: ROLE_INVALID, category: ERROR, remediation: The eIDAS certificate lacks the required PSD2 role (AISP/PISP/PIISP).}
+- {code: FORMAT_ERROR, category: ERROR}
+- {code: PARAMETER_NOT_CONSISTENT, category: ERROR}
+- {code: PARAMETER_NOT_SUPPORTED, category: ERROR}
+- {code: PSU_CREDENTIALS_INVALID, category: ERROR}
+- {code: SERVICE_INVALID, category: ERROR}
+- {code: SERVICE_BLOCKED, category: ERROR}
+- {code: CORPORATE_ID_INVALID, category: ERROR}
+- {code: CONSENT_UNKNOWN, category: ERROR}
+- {code: CONSENT_INVALID, category: ERROR}
+- {code: CONSENT_EXPIRED, category: ERROR, remediation: Re-establish consent via the SCA flow.}
+- {code: TOKEN_UNKNOWN, category: ERROR}
+- {code: TOKEN_INVALID, category: ERROR}
+- {code: TOKEN_EXPIRED, category: ERROR, remediation: Exchange the refresh token for a new access token (600s TTL).}
+- {code: RESOURCE_UNKNOWN, category: ERROR}
+- {code: RESOURCE_EXPIRED, category: ERROR}
+- {code: RESOURCE_BLOCKED, category: ERROR}
+- {code: TIMESTAMP_INVALID, category: ERROR}
+- {code: PERIOD_INVALID, category: ERROR}
+- {code: SCA_METHOD_UNKNOWN, category: ERROR}
+- {code: SCA_INVALID, category: ERROR}
+- {code: STATUS_INVALID, category: ERROR}
+- {code: PRODUCT_INVALID, category: ERROR}
+- {code: PRODUCT_UNKNOWN, category: ERROR}
+- {code: PAYMENT_FAILED, category: ERROR}
+- {code: REQUIRED_KID_MISSING, category: ERROR, remediation: Include the keyId parameter in the Signature header.}
+- {code: EXECUTION_DATE_INVALID, category: ERROR}
+- {code: CANCELLATION_INVALID, category: ERROR}
+- {code: BENEFICIARY_WHITELISTING_REQUIRED, category: ERROR}
+- {code: FUNDS_NOT_AVAILABLE, category: ERROR}
+- {code: CONTENT_INVALID, category: ERROR}
+- {code: SESSIONS_NOT_SUPPORTED, category: ERROR}
+- {code: ACCESS_EXCEEDED, category: ERROR, remediation: Recurring consent access exceeded 4x/day unattended limit; retry later or in attended mode.}
+- {code: REQUESTED_FORMATS_INVALID, category: ERROR}
+- {code: CARD_INVALID, category: ERROR}
+- {code: NO_PIIS_ACTIVATION, category: ERROR}
+- {code: REFERENCE_MIX_INVALID, category: ERROR}
+- {code: REFERENCE_STATUS_INVALID, category: ERROR}

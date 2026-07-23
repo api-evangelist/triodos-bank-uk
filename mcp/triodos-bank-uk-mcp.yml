@@ -1,0 +1,45 @@
+generated: '2026-07-23'
+method: derived
+status: candidate
+source: openapi/triodos-bank-uk-xs2a-openapi.json, openapi/triodos-bank-uk-auth-openapi.json
+notes: >-
+  Triodos publishes no official hosted MCP server. This is a candidate tool list
+  derived from the read-oriented XS2A operations most useful to an agent, grounded
+  in real operationIds. Payment-initiation/authorisation operations are PSD2 SCA
+  and eIDAS-gated and are intentionally not exposed as unattended tools. All calls
+  require OAuth2 access tokens, eIDAS certificates, and HTTP message signatures.
+server:
+  name: triodos-bank-uk-xs2a
+  transport: http
+  url: null
+tools:
+- name: get_accounts
+  description: List the PSU payment accounts covered by an AIS consent.
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#getAccounts
+- name: get_account
+  description: Read details of a single account by account-id.
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#getAccount
+- name: get_balances
+  description: Read balances for an account.
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#getBalances
+- name: get_transactions
+  description: Read the transaction history for an account.
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#getTransactions
+- name: get_savings_account
+  description: Read savings account details (extended AIS).
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#getAccount_1
+- name: register_ais_consent
+  description: Register an AIS account-information consent resource.
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#registerConsentRequest
+- name: get_consent_status
+  description: Check the status of an AIS consent.
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#getAisConsentStatus
+- name: confirm_funds
+  description: Check availability of funds on an account (CBPII/PIIS).
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#confirmFundsAvailable
+- name: get_payment_status
+  description: Check the transaction status of a payment initiation.
+  source_operation: openapi/triodos-bank-uk-xs2a-openapi.json#getStatus
+- name: get_openid_configuration
+  description: Retrieve the tenant OpenID Connect discovery document.
+  source_operation: openapi/triodos-bank-uk-auth-openapi.json#configuration

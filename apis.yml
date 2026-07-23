@@ -141,6 +141,52 @@ apis:
   - type: APIReference
     url: https://developer.triodos.com/reference
 common:
+- type: VulnerabilityDisclosure
+  url: security/triodos-bank-uk-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/triodos-bank-uk-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/triodos-bank-uk-agentic-access.yml
+- type: Security
+  url: security/triodos-bank-uk-vulnerability-disclosure.yml
+- type: SecurityTxt
+  url: well-known/triodos-bank-uk-security.txt
+- type: WellKnown
+  url: well-known/triodos-bank-uk-well-known.yml
+- type: Authentication
+  url: authentication/triodos-bank-uk-authentication.yml
+- type: OAuthScopes
+  url: scopes/triodos-bank-uk-scopes.yml
+- type: Conventions
+  url: conventions/triodos-bank-uk-conventions.yml
+- type: Idempotency
+  url: conventions/triodos-bank-uk-conventions.yml
+- type: ErrorCatalog
+  url: errors/triodos-bank-uk-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/triodos-bank-uk-lifecycle.yml
+- type: Conformance
+  url: conformance/triodos-bank-uk-conformance.yml
+- type: Compliance
+  url: https://www.triodos.co.uk/open-banking-developers
+- type: Sandbox
+  url: sandbox/triodos-bank-uk-sandbox.yml
+- type: DataModel
+  url: data-model/triodos-bank-uk-data-model.yml
+- type: MCPServer
+  url: mcp/triodos-bank-uk-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/triodos-bank-uk-xs2a-overlay.yaml
+- type: Overlay
+  url: overlays/triodos-bank-uk-auth-overlay.yaml
+- type: ChangeLog
+  url: changelog/triodos-bank-uk-changelog.yml
+- type: APIReference
+  url: https://developer.triodos.com/reference
+- type: SignUp
+  url: https://developer.triodos.com/docs/registration
 - type: Website
   url: https://www.triodos.co.uk/
 - type: DeveloperPortal
@@ -162,7 +208,7 @@ common:
 - type: PrivacyPolicy
   url: https://www.triodos.co.uk/privacy-statement
 - type: LLMsTxt
-  url: https://developer.triodos.com/llms.txt
+  url: llms/triodos-bank-uk-llms.txt
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

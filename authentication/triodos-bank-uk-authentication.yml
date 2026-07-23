@@ -1,0 +1,67 @@
+generated: '2026-07-23'
+method: searched
+source: https://developer.triodos.com/docs/authorisation
+docs:
+- https://developer.triodos.com/docs/authorisation
+- https://developer.triodos.com/docs/signatures
+- https://developer.triodos.com/docs/registration
+notes: >-
+  The harvested OpenAPI documents do not declare components.securitySchemes (the
+  Berlin Group NextGenPSD2 template externalises auth), so this profile is
+  captured from the Triodos developer documentation rather than derived from the
+  spec. Auth is a multi-layer PSD2 stack: transport-layer eIDAS mutual-TLS,
+  message-layer HTTP signatures, and application-layer OAuth2/OpenID Connect with
+  PSD2 Strong Customer Authentication.
+summary:
+  types: [oauth2, openIdConnect, mutualTLS, httpMessageSignature, http-basic]
+  oauth2_flows: [authorizationCode, refreshToken]
+  sca: required
+  standard: Berlin Group NextGenPSD2 XS2A v1.3.6 (OAuth2 SCA Approach, Implicit Start)
+schemes:
+- name: eidas-qwac-mtls
+  layer: transport
+  type: mutualTLS
+  description: >-
+    Production data endpoints (https://api-ma.triodos.com) require a mutual-TLS
+    connection presenting a valid eIDAS QWAC (Qualified Website Authentication
+    Certificate). Not required in the sandbox (https://xs2a-sandbox.triodos.com).
+    Client-initiated browser authorisations use the non-mTLS host
+    https://api.triodos.com to avoid prompting the PSU for a client certificate.
+- name: tpp-http-message-signature
+  layer: message
+  type: httpMessageSignature
+  description: >-
+    All XS2A endpoints mandate a digital signature per the NextGenPSD2 Framework
+    v1.3 (Errata), referencing draft-cavage-http-signatures-10. The TPP signs the
+    request with its eIDAS QSEALC (Qualified Electronic Seal Certificate).
+  headers: [Digest, Signature, TPP-Signature-Certificate, X-Request-ID]
+  algorithms: [rsa-sha256, rsa-sha512]
+  digest: SHA-256=
+  signed_headers: [digest, x-request-id]
+  keyid_format: 'SN=<hex-serial>,<CA-DistinguishedName in RFC1779>'
+- name: openid-connect
+  layer: application
+  type: openIdConnect
+  openIdConnectUrl: https://api.triodos.com/auth/{tenant}/.well-known/openid-configuration
+  sandbox_openIdConnectUrl: https://xs2a-sandbox.triodos.com/auth/{tenant}/.well-known/openid-configuration
+  description: >-
+    OpenID Connect Authorization Code Flow implements the OAuth2 SCA approach.
+    Per-tenant discovery documents (nl / uk / be) are exposed as an API operation.
+- name: oauth2-authorization-code
+  layer: application
+  type: oauth2
+  flow: authorizationCode
+  pkce: required (RFC 7636, S256 code_challenge_method)
+  authorizationUrl: https://api.triodos.com/auth/{tenant}/v1/auth
+  tokenUrl: https://api.triodos.com/auth/{tenant}/v1/token
+  revocationUrl: https://api.triodos.com/auth/{tenant}/v1/token/revoke
+  userinfoUrl: https://api.triodos.com/auth/{tenant}/v1/userinfo
+  registrationUrl: https://api.triodos.com/auth/{tenant}/v1/registration
+  token_endpoint_auth: HTTP Basic (client_id:client_secret, RFC 2617)
+  access_token_ttl_seconds: 600
+  refresh: offline_access scope issues a refresh token (grant_type=refresh_token)
+  dynamic_client_registration: >-
+    OAuth 2.0 Dynamic Client Registration gated by an Initial Access Token, which
+    is obtained by presenting the TPP eIDAS X.509 certificate to
+    GET /{tenant}/onboarding/v1 (initialAccessToken).
+scopes_ref: scopes/triodos-bank-uk-scopes.yml

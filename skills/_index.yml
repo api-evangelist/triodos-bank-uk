@@ -1,0 +1,16 @@
+generated: '2026-07-23'
+method: generated
+source: openapi/triodos-bank-uk-xs2a-openapi.json
+skills:
+- file: triodos-bank-uk-account-information.md
+  name: Access Triodos account information (AIS)
+  api: openapi/triodos-bank-uk-xs2a-openapi.json
+  operations: [registerConsentRequest, createAisAuthorisation, getAisConsentStatus, getAccounts, getAccount, getBalances, getTransactions]
+- file: triodos-bank-uk-initiate-payment.md
+  name: Initiate and authorise a Triodos payment (PIS)
+  api: openapi/triodos-bank-uk-xs2a-openapi.json
+  operations: [initiateSepaPayment, initiateUkDomesticPayment, initiateCrossBorderPayment, createAuthorisation_2, submitAuthorisation_2, getStatus_2]
+- file: triodos-bank-uk-confirmation-of-funds.md
+  name: Confirm availability of funds (CoF / CBPII)
+  api: openapi/triodos-bank-uk-xs2a-openapi.json
+  operations: [registerConsentRequest_1, createPiisAuthorisation, getPiisConsentStatus, confirmFundsAvailable]

@@ -1,0 +1,45 @@
+generated: '2026-07-23'
+method: searched
+source: https://developer.triodos.com/changelog
+docs: https://developer.triodos.com/changelog
+scheme: dated-entries (undated in source; ordered newest-first as published)
+standard_version: Berlin Group NextGenPSD2 XS2A v1.3.6
+entries:
+- title: Allowed frequency of AIS consent requests
+  url: https://developer.triodos.com/changelog/allowed-frequency-of-ais-consent-requests
+  breaking: false
+  highlights: >-
+    Brought one-off account access consent in line with EBA guidelines: a one-off
+    consent can always access both balances and full transaction history; a
+    recurring consent allows balances + transactions up to four times a day in
+    unattended mode (no PSU-IP-Address header).
+- title: Support for Berlin Group v1.3.6 and minor fixes
+  url: https://developer.triodos.com/changelog/support-for-berlin-group-v136-and-minor-fixes
+  breaking: false
+  date: '2020-10-30'
+  highlights: >-
+    Added the confirmation link (synonym for the proprietary scaStatus link) and
+    new scaStatus values (scaMethodSelected, started, unconfirmed, failed,
+    finalised). Fixed the OAuth state parameter not being appended to the
+    redirectUri on PSU cancellation.
+- title: Support for Bank Offered Consent
+  url: https://developer.triodos.com/changelog/support-for-bank-offered-consent
+  breaking: false
+  highlights: >-
+    Added the Bank Offered Consent model (PSU account number no longer required
+    up front in AIS/PIS requests). Fixed get-transactions to always return the
+    full history on the first request; debtorName added to payment details.
+- title: Bank transactions codes and organization identifier
+  url: https://developer.triodos.com/changelog/bank-transactions-codes-and-organization-identifier
+  breaking: false
+  highlights: >-
+    Added support for dots in the PSP number part of an organization identifier;
+    added optional proprietaryBankTransactionCode field to Transactions.
+- title: 'Update: fixes'
+  url: https://developer.triodos.com/changelog/update-fixes
+  breaking: true
+  highlights: >-
+    Authorization Code response changed to 302 Found (was 303); Digest header
+    supports the SHA-256= prefix; TPP-Signature-Certificate accepts a base64
+    certificate directly (no URL-encoded PEM); Signature algorithm names changed
+    to rsa-sha256 / rsa-sha512 (were SHA256withRSA / SHA512withRSA).

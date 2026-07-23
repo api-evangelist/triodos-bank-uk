@@ -1,0 +1,14 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Triodos Auth service
+  version: 1.0.0
+extends: openapi/triodos-bank-uk-auth-openapi.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: triodos-bank-uk
+    x-apievangelist-auth: authentication/triodos-bank-uk-authentication.yml
+    x-apievangelist-scopes: scopes/triodos-bank-uk-scopes.yml
+    x-apievangelist-flow: OpenID Connect Authorization Code Flow with PKCE (S256)
+    x-apievangelist-pkce: required
+    x-apievangelist-access-token-ttl-seconds: 600

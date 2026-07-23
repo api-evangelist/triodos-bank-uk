@@ -1,0 +1,34 @@
+generated: '2026-07-23'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.triodos.co.uk
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Jan 10 10:36:45 2027 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: developer.triodos.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  2 12:57:57 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: api-ma.triodos.com
+  https: true
+  tls_version: TLSv1.2
+  cert_expires: Nov 13 12:06:27 2026 GMT
+  hsts: null
+domains:
+- domain: triodos.co.uk
+  dnssec: true
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject
+- domain: triodos.com
+  dnssec: true
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

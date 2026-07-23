@@ -1,0 +1,47 @@
+generated: '2026-07-23'
+method: searched
+source: https://developer.triodos.com/docs/sandbox-and-production-environments
+docs: https://developer.triodos.com/docs/sandbox-and-production-environments
+summary: >-
+  Triodos publishes a fully functional public sandbox that is functionally
+  identical to production, except mutual-TLS is not implemented and an eIDAS
+  QSEALC certificate is not required to sign requests. A browser-based API Test
+  Client is provided to explore the flows.
+environments:
+- name: sandbox
+  base_url: https://xs2a-sandbox.triodos.com
+  xs2a_base: https://xs2a-sandbox.triodos.com/xs2a-bg
+  auth_base: https://xs2a-sandbox.triodos.com/auth
+  mtls_required: false
+  eidas_cert_required: false
+  test_client: https://xs2a-sandbox.triodos.com/xs2a-bg/pages/test-client/index.action
+  openapi:
+  - https://xs2a-sandbox.triodos.com/xs2a-bg/openapi.json
+  - https://xs2a-sandbox.triodos.com/auth/openapi.json
+  version_check: https://xs2a-sandbox.triodos.com/xs2a-bg/version
+  data_reset: >-
+    Sandbox data is cleared on a schedule; re-registration is required after each
+    refresh.
+  refresh_dates:
+  - '2026-03-09'
+  - '2026-06-15'
+  - '2026-09-14'
+  - '2026-12-14'
+- name: production
+  mtls_base: https://api-ma.triodos.com
+  non_mtls_base: https://api.triodos.com
+  mtls_required: true
+  eidas_cert_required: true (QWAC + QSEALC)
+  browser_auth_host: https://api.triodos.com
+  openapi:
+  - https://api.triodos.com/xs2a-bg/openapi.json
+  - https://api.triodos.com/auth/openapi.json
+  version_check: https://api.triodos.com/xs2a-bg/version
+  kpi_page: https://api.triodos.com/xs2a-bg/pages/performanceindicatorspage.xhtml
+tenants: [nl, uk, be]
+test_values:
+  note: >-
+    Triodos does not publish fixed magic account/IBAN test values in the docs;
+    test PSUs, accounts, and consents are provisioned via the sandbox test client
+    and are reset on each sandbox refresh. No verbatim test credentials are
+    reproduced here.

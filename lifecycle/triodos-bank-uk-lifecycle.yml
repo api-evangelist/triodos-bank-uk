@@ -1,0 +1,35 @@
+generated: '2026-07-23'
+method: searched
+source: https://developer.triodos.com/docs/sandbox-and-production-environments
+docs:
+- https://developer.triodos.com/changelog
+- https://developer.triodos.com/docs/sandbox-and-production-environments
+versioning:
+  scheme: uri-path
+  current: v2 (CoF consents / savings); v1 (AIS, PIS, general)
+  framework: Berlin Group NextGenPSD2 XS2A v1.3.6
+  docs: https://developer.triodos.com/docs/references
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    No formal RFC 8594 Sunset/Deprecation-header policy is published. Deprecations
+    are announced via the changelog; deprecated operations remain for backwards
+    compatibility (e.g. the paginated transactions endpoint, and the legacy
+    scaStatus link kept as a synonym for the confirmation link).
+deprecated_operations:
+- openapi/triodos-bank-uk-xs2a-openapi.json#getTransactionsPage
+health:
+  version_endpoints:
+  - https://api.triodos.com/xs2a-bg/version
+  - https://xs2a-sandbox.triodos.com/xs2a-bg/version
+  kpi_page: https://api.triodos.com/xs2a-bg/pages/performanceindicatorspage.xhtml
+  note: >-
+    Availability is exposed via per-environment version endpoints and a published
+    Key Performance Indicators page for the Open Banking (XS2A) channel. There is
+    no dedicated hosted status page (e.g. statuspage.io).
+sandbox_refresh_schedule:
+- '2026-03-09'
+- '2026-06-15'
+- '2026-09-14'
+- '2026-12-14'

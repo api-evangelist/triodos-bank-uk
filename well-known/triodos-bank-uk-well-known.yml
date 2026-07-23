@@ -1,0 +1,42 @@
+generated: '2026-07-23'
+method: searched
+source: live probe of /.well-known/* across Triodos hosts
+notes: >-
+  The XS2A production data hosts (api-ma.triodos.com) require eIDAS/mutual-TLS and
+  refuse anonymous connections (curl exit / no response). api.triodos.com (the
+  non-mTLS authorization host) and developer.triodos.com return 404 for the
+  standard discovery paths. Only the corporate website publishes a security.txt.
+  OIDC discovery is exposed per-tenant as an API operation
+  (GET /{tenant}/.well-known/openid-configuration on the auth service), not at a
+  host root, so it is captured in the authentication/ artifact rather than here.
+hosts:
+- host: https://www.triodos.co.uk
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: triodos-bank-uk-security.txt
+- host: https://api.triodos.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+- host: https://developer.triodos.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+- host: https://api-ma.triodos.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 0
+    note: connection refused without eIDAS mutual-TLS client certificate

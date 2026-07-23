@@ -1,0 +1,1400 @@
+generated: '2026-07-23'
+method: generated
+source: openapi/triodos-bank-uk-auth-openapi.json, openapi/triodos-bank-uk-xs2a-openapi.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 101
+  by_action_class:
+    connected: 51
+    acting: 50
+  by_consequence:
+    read: 51
+    write: 13
+    safety-critical: 1
+    physical: 36
+  human_in_the_loop_required: 1
+operations:
+- path: /{tenant}/v1/auth
+  method: get
+  operationId: authorizeGet
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/auth
+  method: post
+  operationId: authorizePost
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/.well-known/openid-configuration
+  method: get
+  operationId: configuration
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/registration
+  method: post
+  operationId: authorizePost_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/token
+  method: post
+  operationId: token
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/token/revoke
+  method: post
+  operationId: tokenRevocation
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /{tenant}/v1/userinfo
+  method: get
+  operationId: doGet
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/userinfo
+  method: post
+  operationId: doPost
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/onboarding/v1
+  method: get
+  operationId: initialAccessToken
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/accounts/{account-id}
+  method: get
+  operationId: getAccount
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/accounts
+  method: get
+  operationId: getAccounts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/accounts/{account-id}/balances
+  method: get
+  operationId: getBalances
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/accounts/{account-id}/transactions
+  method: get
+  operationId: getTransactions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/accounts/{account-id}/transactions/page
+  method: get
+  operationId: getTransactionsPage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/authorisations
+  method: get
+  operationId: getAuthorisations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/authorisations
+  method: post
+  operationId: createAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAuthorisation
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations
+  method: get
+  operationId: getCancellationAuthorisations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations
+  method: post
+  operationId: createCancellationAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: get
+  operationId: getCancellationAuthorisation
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: put
+  operationId: submitCancellationAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}
+  method: delete
+  operationId: deletePayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/status
+  method: get
+  operationId: getStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/bulk-payments/sepa-credit-transfers
+  method: post
+  operationId: initiateSepaBulkPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/funds-confirmations
+  method: post
+  operationId: confirmFundsAvailable
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/consents/{resource-id}/authorisations
+  method: get
+  operationId: getAisAuthorisations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents/{resource-id}/authorisations
+  method: post
+  operationId: createAisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/consents/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAisAuthorisationStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/consents/{resource-id}
+  method: get
+  operationId: getAisConsent
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents/{resource-id}
+  method: delete
+  operationId: deleteAisConsent
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/consents/{resource-id}/status
+  method: get
+  operationId: getAisConsentStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents
+  method: post
+  operationId: registerConsentRequest
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/authorisations
+  method: get
+  operationId: getAuthorisations_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/authorisations
+  method: post
+  operationId: createAuthorisation_1
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAuthorisation_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAuthorisation_1
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/cancellation-authorisations
+  method: get
+  operationId: getCancellationAuthorisations_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/cancellation-authorisations
+  method: post
+  operationId: createCancellationAuthorisation_1
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: get
+  operationId: getCancellationAuthorisation_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: put
+  operationId: submitCancellationAuthorisation_1
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}
+  method: delete
+  operationId: deletePayment_1
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/status
+  method: get
+  operationId: getStatus_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/cross-border-credit-transfers
+  method: post
+  operationId: initiateCrossBorderPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/authorisations
+  method: get
+  operationId: getAuthorisations_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/authorisations
+  method: post
+  operationId: createAuthorisation_2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAuthorisation_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAuthorisation_2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations
+  method: get
+  operationId: getCancellationAuthorisations_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations
+  method: post
+  operationId: createCancellationAuthorisation_2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: get
+  operationId: getCancellationAuthorisation_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: put
+  operationId: submitCancellationAuthorisation_2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}
+  method: delete
+  operationId: deletePayment_2
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/status
+  method: get
+  operationId: getStatus_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/sepa-credit-transfers
+  method: post
+  operationId: initiateSepaPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/authorisations
+  method: get
+  operationId: getAuthorisations_3
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/authorisations
+  method: post
+  operationId: createAuthorisation_3
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAuthorisation_3
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAuthorisation_3
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations
+  method: get
+  operationId: getCancellationAuthorisations_3
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations
+  method: post
+  operationId: createCancellationAuthorisation_3
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: get
+  operationId: getCancellationAuthorisation_3
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: put
+  operationId: submitCancellationAuthorisation_3
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}
+  method: delete
+  operationId: deletePayment_3
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/status
+  method: get
+  operationId: getStatus_3
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/payments/uk-domestic-transfers
+  method: post
+  operationId: initiateUkDomesticPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/authorisations
+  method: get
+  operationId: getAuthorisations_4
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/authorisations
+  method: post
+  operationId: createAuthorisation_4
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAuthorisation_4
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAuthorisation_4
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations
+  method: get
+  operationId: getCancellationAuthorisations_4
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations
+  method: post
+  operationId: createCancellationAuthorisation_4
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: get
+  operationId: getCancellationAuthorisation_4
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: put
+  operationId: submitCancellationAuthorisation_4
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}
+  method: delete
+  operationId: deletePayment_4
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/status
+  method: get
+  operationId: getStatus_4
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/sepa-credit-transfers
+  method: post
+  operationId: initiateSepaPeriodicPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/authorisations
+  method: get
+  operationId: getAuthorisations_5
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/authorisations
+  method: post
+  operationId: createAuthorisation_5
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAuthorisation_5
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAuthorisation_5
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations
+  method: get
+  operationId: getCancellationAuthorisations_5
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations
+  method: post
+  operationId: createCancellationAuthorisation_5
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: get
+  operationId: getCancellationAuthorisation_5
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}
+  method: put
+  operationId: submitCancellationAuthorisation_5
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}
+  method: delete
+  operationId: deletePayment_5
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/status
+  method: get
+  operationId: getStatus_5
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/periodic-payments/uk-domestic-transfers
+  method: post
+  operationId: initiateUkDomesticPeriodicPayment
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations
+  method: get
+  operationId: getPiisAuthorisations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations
+  method: post
+  operationId: createPiisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getPiisAuthorisationStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitPiisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}
+  method: get
+  operationId: getPiisConsent
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}
+  method: delete
+  operationId: deletePiisConsent
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/status
+  method: get
+  operationId: getPiisConsentStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds
+  method: post
+  operationId: registerConsentRequest_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/savings/{account-id}
+  method: get
+  operationId: getAccount_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/savings
+  method: get
+  operationId: getAccounts_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/savings/{account-id}/balances
+  method: get
+  operationId: getBalances_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/savings/{account-id}/transactions
+  method: get
+  operationId: getTransactions_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
