@@ -1,0 +1,322 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Triodos Auth service",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authorization Endpoint",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authorize end-user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/v1/auth",
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              },
+              {
+                "name": "request",
+                "value": "",
+                "type": "query",
+                "description": "Not supported."
+              },
+              {
+                "name": "request_uri",
+                "value": "",
+                "type": "query",
+                "description": "Not supported."
+              },
+              {
+                "name": "registration",
+                "value": "",
+                "type": "query",
+                "description": "Not supported."
+              },
+              {
+                "name": "response_type",
+                "value": "",
+                "type": "query",
+                "description": "Always set to \"code\"."
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "OAuth 2.0 Client Identifier valid at the Authorization Server."
+              },
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query",
+                "description": "Redirection URI to which the response will be sent. This URI MUST exactly match one of the Redirection URI values for the Client pre-registered at the OpenID Provider, with the matching performed as described in Section 6.2.1 of RFC3986 (Simple String Comparison). When using this flow, the Redirection URI SHOULD use the https scheme; however, it MAY use the http scheme, provided that the Client Type is confidential, as defined in Section 2.1 of OAuth 2.0, and provided the OP allows the use of http Redirection URIs in this case. The Redirection URI MAY use an alternate scheme, such as one that is intended to identify a callback into a native application."
+              },
+              {
+                "name": "scope",
+                "value": "",
+                "type": "query",
+                "description": "OpenID Connect requests MUST contain the openid scope value. Scope values used that are not understood by an implementation SHOULD be ignored. See OpenID Connect Core 1.0 - Sections 5.4 and 11 for additional scope values defined by this specification."
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Opaque value used to maintain state between the request and the callback. Typically, Cross-Site Request Forgery (CSRF, XSRF) mitigation is done by cryptographically binding the value of this parameter with a browser cookie."
+              },
+              {
+                "name": "nonce",
+                "value": "",
+                "type": "query",
+                "description": "String value used to associate a Client session with an ID Token, and to mitigate replay attacks. The value is passed through unmodified from the Authentication Request to the ID Token. Sufficient entropy MUST be present in the nonce values used to prevent attackers from guessing values. For implementation notes, see Section 15.5.2."
+              },
+              {
+                "name": "response_mode",
+                "value": "",
+                "type": "query",
+                "description": "Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint. This use of this parameter is NOT RECOMMENDED when the Response Mode that would be requested is the default mode specified for the Response Type."
+              },
+              {
+                "name": "prompt",
+                "value": "",
+                "type": "query",
+                "description": "Space delimited, case sensitive list of ASCII string values that specifies whether the Authorization Server prompts the End-User for reauthentication and consent."
+              },
+              {
+                "name": "max_age",
+                "value": "",
+                "type": "query",
+                "description": "Maximum Authentication Age. Specifies the allowable elapsed time in seconds since the last time the End-User was actively authenticated by the OP. If the elapsed time is greater than this value, the OP MUST attempt to actively re-authenticate the End-User. (The max_age request parameter corresponds to the OpenID 2.0 PAPE max_auth_age request parameter.) When max_age is used, the ID Token returned MUST include an auth_time Claim Value."
+              },
+              {
+                "name": "code_challenge",
+                "value": "",
+                "type": "query",
+                "description": "Code challenge, see RFC7636 for more information."
+              },
+              {
+                "name": "code_challenge_method",
+                "value": "",
+                "type": "query",
+                "description": "Always set to \"S256\"."
+              },
+              {
+                "name": "id_token_hint",
+                "value": "",
+                "type": "query",
+                "description": "ID Token previously issued by the Authorization Server being passed as a hint about the End-User's current or past authenticated session with the Client. If the End-User identified by the ID Token is logged in or is logged in by the request, then the Authorization Server returns a positive response; otherwise, it returns an error. When possible, an id_token_hint SHOULD be present when prompt=none is used and an invalid_request error MAY be returned if it is not; however, the server SHOULD respond successfully when possible, even if it is not present. The Authorization Server need not be listed as an audience of the ID Token when it is used as an id_token_hint value. If the ID Token received by the RP from the OP is encrypted, to use it as an id_token_hint, the Client MUST decrypt the signed ID Token contained within the encrypted ID Token. The Client MAY re-encrypt the signed ID token to the Authentication Server using a key that enables the server to decrypt the ID Token, and use the re-encrypted ID token as the id_token_hint value."
+              }
+            ]
+          },
+          "docs": "The Authorization Endpoint performs Authentication of the End-User. This is done by sending the User Agent to the Authorization Server's Authorization Endpoint for Authentication and Authorization, using request parameters defined by OAuth 2.0 and additional parameters and parameter values defined by OpenID Connect."
+        },
+        {
+          "info": {
+            "name": "Authorize end-user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/v1/auth",
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              }
+            ]
+          },
+          "docs": "The Authorization Endpoint performs Authentication of the End-User. This is done by sending the User Agent to the Authorization Server's Authorization Endpoint for Authentication and Authorization, using request parameters defined by OAuth 2.0 and additional parameters and parameter values defined by OpenID Connect."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Configuration Endpoint",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/.well-known/openid-configuration",
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              }
+            ]
+          },
+          "docs": "The Configuration Endpoint allows the OpenID Provider's configuration information to be retrieved."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Client Registration Endpoint",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Register client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/v1/registration",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              }
+            ]
+          },
+          "docs": "The Client Registration Endpoint is an OAuth 2.0 Protected Resource through which a new Client registration can be requested. The OpenID Provider requires an Initial Access Token that is provisioned in the service the client wants to access, to restrict registration requests to only authorized Clients or developers."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Token Endpoint",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/v1/token",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              }
+            ]
+          },
+          "docs": "To obtain an Access Token and a Refresh Token, the RP (Client) sends a Token Request to the Token Endpoint to obtain a Token Response, as described in Section 3.2 of OAuth 2.0."
+        },
+        {
+          "info": {
+            "name": "Revoke token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/v1/token/revoke",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              }
+            ]
+          },
+          "docs": "The client requests the revocation of a particular token by making an HTTP POST request to the token revocation endpoint URL. See RFC7009 for more information."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "UserInfo Endpoint",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get UserInfo",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/v1/userinfo",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              }
+            ]
+          },
+          "docs": "The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the authenticated End-User. To obtain the requested Claims about the End-User, the Client makes a request to the UserInfo Endpoint using an Access Token obtained through OpenID Connect Authentication. These Claims are normally represented by a JSON object that contains a collection of name and value pairs for the Claims."
+        },
+        {
+          "info": {
+            "name": "Get UserInfo",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://xs2a-sandbox.triodos.com/auth/:tenant/v1/userinfo",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "tenant",
+                "value": "",
+                "type": "path",
+                "description": "Branch of the request."
+              }
+            ]
+          },
+          "docs": "The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the authenticated End-User. To obtain the requested Claims about the End-User, the Client makes a request to the UserInfo Endpoint using an Access Token obtained through OpenID Connect Authentication. These Claims are normally represented by a JSON object that contains a collection of name and value pairs for the Claims."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

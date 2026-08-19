@@ -2,11 +2,9 @@ generated: '2026-07-23'
 method: derived
 status: candidate
 source: openapi/triodos-bank-uk-xs2a-openapi.json, openapi/triodos-bank-uk-auth-openapi.json
-notes: >-
-  Triodos publishes no official hosted MCP server. This is a candidate tool list
-  derived from the read-oriented XS2A operations most useful to an agent, grounded
-  in real operationIds. Payment-initiation/authorisation operations are PSD2 SCA
-  and eIDAS-gated and are intentionally not exposed as unattended tools. All calls
+notes: Triodos publishes no official hosted MCP server. This is a candidate tool list derived from the
+  read-oriented XS2A operations most useful to an agent, grounded in real operationIds. Payment-initiation/authorisation
+  operations are PSD2 SCA and eIDAS-gated and are intentionally not exposed as unattended tools. All calls
   require OAuth2 access tokens, eIDAS certificates, and HTTP message signatures.
 server:
   name: triodos-bank-uk-xs2a
@@ -43,3 +41,9 @@ tools:
 - name: get_openid_configuration
   description: Retrieve the tenant OpenID Connect discovery document.
   source_operation: openapi/triodos-bank-uk-auth-openapi.json#configuration
+deployment:
+  mode: none
+  verified: derived
+  tools: 10
+  checked: '2026-08-12'
+  source: catalog MCP census
