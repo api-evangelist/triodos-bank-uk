@@ -51,7 +51,7 @@ tags:
 - Specialist Lender
 created: '2026-07-23'
 modified: '2026-07-23'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: triodos-bank-uk:triodos-account-information-api
   name: Triodos Account Information Service (AIS) API
