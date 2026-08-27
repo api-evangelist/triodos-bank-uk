@@ -67,97 +67,179 @@ created: '2026-07-23'
 modified: '2026-07-23'
 specificationVersion: '0.23'
 apis:
-- aid: triodos-bank-uk:triodos-account-information-api
-  name: Triodos Account Information Service (AIS) API
+- aid: triodos-bank-uk:triodos-bank-uk-account-information-service-api
+  name: Triodos Bank UK Account Information Service API
   description: >-
-    The XS2A Account Information Service (AIS) from Triodos Bank UK - 13
-    operation(s) for consented, secure read access to Triodos payment account
-    details, balances, and transaction history under the Berlin Group
-    NextGenPSD2 standard.
+    This service may be used by an AISP to request information about the account of a PSU. The account
+    is managed by the ASPSP providing the XS2A Interface. Functionality and restrictions of this service
+    comply with the requirements defined by article 67 of PSD2.
   humanURL: https://developer.triodos.com/docs/getting-started
   baseURL: https://api-ma.triodos.com/xs2a-bg
   tags:
   - Account Information Service
-  - AIS
-  - Open Banking
   properties:
   - type: OpenAPI
-    url: openapi/triodos-bank-uk-xs2a-openapi.json
+    url: openapi/triodos-bank-uk-account-information-service-api-openapi.yml
   - type: Documentation
     url: https://developer.triodos.com/docs/getting-started
   - type: APIReference
     url: https://developer.triodos.com/reference
   - type: Documentation
     url: https://www.triodos.co.uk/open-banking-developers
-- aid: triodos-bank-uk:triodos-payment-initiation-api
-  name: Triodos Payment Initiation Service (PIS) API
-  description: >-
-    The XS2A Payment Initiation Service (PIS) from Triodos Bank UK - 66
-    operation(s) for initiating, authorising, and tracking SEPA, cross-border,
-    UK domestic, and periodic (recurring) payments from Triodos accounts under
-    the Berlin Group NextGenPSD2 standard.
+- aid: triodos-bank-uk:triodos-bank-uk-authorization-endpoint-api
+  name: Triodos Bank UK Authorization Endpoint API
+  description: The Authorization Endpoint performs authentication of the end-user.
   humanURL: https://developer.triodos.com/docs/getting-started
   baseURL: https://api-ma.triodos.com/xs2a-bg
   tags:
-  - Payment Initiation Service
-  - PIS
-  - Payments
+  - Authorization Endpoint
   properties:
   - type: OpenAPI
-    url: openapi/triodos-bank-uk-xs2a-openapi.json
+    url: openapi/triodos-bank-uk-authorization-endpoint-api-openapi.yml
   - type: Documentation
     url: https://developer.triodos.com/docs/getting-started
   - type: APIReference
     url: https://developer.triodos.com/reference
   - type: Documentation
     url: https://www.triodos.co.uk/open-banking-developers
-- aid: triodos-bank-uk:triodos-confirmation-of-funds-api
-  name: Triodos Confirmation of Funds Service (CoF) API
+- aid: triodos-bank-uk:triodos-bank-uk-client-registration-endpoint-api
+  name: Triodos Bank UK Client Registration Endpoint API
+  description: The Client Registration Endpoint performs registration of the client.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Client Registration Endpoint
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-client-registration-endpoint-api-openapi.yml
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-bank-uk-configuration-endpoint-api
+  name: Triodos Bank UK Configuration Endpoint API
+  description: The Configuration Endpoint provides configuration information about this OpenID service.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Configuration Endpoint
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-configuration-endpoint-api-openapi.yml
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-bank-uk-confirmation-of-funds-service-api
+  name: Triodos Bank UK Confirmation of Funds Service API
   description: >-
-    The XS2A Confirmation of Funds Service (CoF/CBPII) from Triodos Bank UK - 9
-    operation(s) for card-based payment instrument issuers to check the
-    availability of funds on a Triodos account under the Berlin Group
-    NextGenPSD2 standard.
+    This service may be used by a PIISP to request a confirmation of the availability of specific funds
+    on the account of a PSU. The account is managed by the ASPSP providing the XS2A Interface. Functionality
+    and restrictions of this service comply with the requirements defined by article 65 of PSD2.
   humanURL: https://developer.triodos.com/docs/getting-started
   baseURL: https://api-ma.triodos.com/xs2a-bg
   tags:
   - Confirmation of Funds Service
-  - CoF
-  - CBPII
   properties:
   - type: OpenAPI
-    url: openapi/triodos-bank-uk-xs2a-openapi.json
+    url: openapi/triodos-bank-uk-confirmation-of-funds-service-api-openapi.yml
   - type: Documentation
     url: https://developer.triodos.com/docs/getting-started
   - type: APIReference
     url: https://developer.triodos.com/reference
   - type: Documentation
     url: https://www.triodos.co.uk/open-banking-developers
-- aid: triodos-bank-uk:triodos-authorization-api
-  name: Triodos XS2A Authorization (OAuth2/OIDC) API
+- aid: triodos-bank-uk:triodos-bank-uk-extended-account-information-service-api
+  name: Triodos Bank UK Extended Account Information Service API
   description: >-
-    The Triodos Auth service - 8 operation(s) implementing OAuth2 / OpenID
-    Connect for XS2A third-party providers, including dynamic client
-    registration, OpenID configuration discovery, authorization, token issuance
-    and revocation, and UserInfo, used to obtain PSD2-scoped access to the AIS,
-    PIS, and CoF APIs.
+    The Extended Account Information Service API from Triodos Bank UK — 4 operation(s) for extended account
+    information service.
   humanURL: https://developer.triodos.com/docs/getting-started
-  baseURL: https://api.triodos.com/auth
+  baseURL: https://api-ma.triodos.com/xs2a-bg
   tags:
-  - Authorization
-  - Authentication
-  - OpenID Connect
-  tags_raw:
-  - Authorization
-  - OAuth2
-  - OpenID Connect
+  - Extended Account Information Service
   properties:
   - type: OpenAPI
-    url: openapi/triodos-bank-uk-auth-openapi.json
+    url: openapi/triodos-bank-uk-extended-account-information-service-api-openapi.yml
   - type: Documentation
     url: https://developer.triodos.com/docs/getting-started
   - type: APIReference
     url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-bank-uk-initial-access-token-service-api
+  name: Triodos Bank UK Initial Access Token Service API
+  description: >-
+    The Initial Access Token Service API from Triodos Bank UK — 1 operation(s) for initial access token
+    service.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Initial Access Token Service
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-initial-access-token-service-api-openapi.yml
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-bank-uk-payment-initiation-service-api
+  name: Triodos Bank UK Payment Initiation Service API
+  description: >-
+    This service may be used by a PISP to initiate a single payment on behalf of a PSU using a given account
+    of that PSU. The account is managed by the ASPSP providing the XS2A Interface. Functionality and restrictions
+    of this service comply with the requirements defined by article 66 of PSD2.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Payment Initiation Service
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-payment-initiation-service-api-openapi.yml
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-bank-uk-token-endpoint-api
+  name: Triodos Bank UK Token Endpoint API
+  description: The Token Endpoint provides and revokes access tokens and refresh tokens.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - Token Endpoint
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-token-endpoint-api-openapi.yml
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
+- aid: triodos-bank-uk:triodos-bank-uk-userinfo-endpoint-api
+  name: Triodos Bank UK UserInfo Endpoint API
+  description: The UserInfo Endpoint provides information about the authenticated end-user.
+  humanURL: https://developer.triodos.com/docs/getting-started
+  baseURL: https://api-ma.triodos.com/xs2a-bg
+  tags:
+  - UserInfo Endpoint
+  properties:
+  - type: OpenAPI
+    url: openapi/triodos-bank-uk-userinfo-endpoint-api-openapi.yml
+  - type: Documentation
+    url: https://developer.triodos.com/docs/getting-started
+  - type: APIReference
+    url: https://developer.triodos.com/reference
+  - type: Documentation
+    url: https://www.triodos.co.uk/open-banking-developers
 common:
 - type: VulnerabilityDisclosure
   url: security/triodos-bank-uk-vulnerability-disclosure.yml
