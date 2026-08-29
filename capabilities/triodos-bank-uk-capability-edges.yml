@@ -1,0 +1,25 @@
+slug: triodos-bank-uk
+provider: Triodos Bank UK
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Payment Initiation Service
+  spec_file: triodos-bank-uk-payment-initiation-service-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.95
+  evidence: POST /{tenant}/v1/bulk-payments/sepa-credit-transfers  initiateSepaBulkPayment  Initiate Sepa
+    Bulk Payment; PUT .../authorisations/{authorisation-id}  Submit payment authorisation
+  reason: 'PSD2/XS2A payment initiation surface: capture of SEPA and cross-border credit transfer instructions,
+    authorisation, status and cancellation — textbook payment instruction capture, validation and authorisation.'

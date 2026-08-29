@@ -253,6 +253,9 @@ apis:
   - type: Documentation
     url: https://www.triodos.co.uk/open-banking-developers
 common:
+- type: CapabilityMap
+  url: capabilities/triodos-bank-uk-capability-edges.yml
+  name: Triodos Bank UK Business Capability Map
 - type: VulnerabilityDisclosure
   url: security/triodos-bank-uk-vulnerability-disclosure.yml
 - type: DomainSecurity
