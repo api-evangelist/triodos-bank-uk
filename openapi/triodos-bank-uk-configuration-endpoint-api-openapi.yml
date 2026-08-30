@@ -1,0 +1,155 @@
+openapi: 3.2.0
+info:
+  title: Triodos Auth service Configuration Endpoint API
+  description: Triodos Auth service
+  termsOfService: https://www.triodos.com
+  contact:
+    name: Triodos Support
+    url: https://www.triodos.com
+    email: info@triodos.com
+  license:
+    name: Creative Commons Attribution 4.0 International Public License
+    url: https://creativecommons.org/licenses/by/4.0/
+  version: '1.0'
+servers:
+- url: https://xs2a-sandbox.triodos.com/auth
+  description: Triodos Auth Sandbox
+tags:
+- name: Configuration Endpoint
+  description: The Configuration Endpoint provides configuration information about this OpenID service.
+  externalDocs:
+    description: OpenID Connect Dynamic Client Registration 1.0 - Chapter 4 Client Configuration Endpoint
+    url: https://openid.net/specs/openid-connect-registration-1_0.html
+paths:
+  /{tenant}/.well-known/openid-configuration:
+    get:
+      tags:
+      - Configuration Endpoint
+      summary: Get configuration
+      description: The Configuration Endpoint allows the OpenID Provider's configuration information to be retrieved.
+      operationId: configuration
+      parameters:
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      responses:
+        '200':
+          description: The response is a set of Claims about the OpenID Provider's configuration, including all necessary endpoints and public key location information. Contains a set of Claims as its members that are a subset of the Metadata values defined in OpenID Connect Discovery 1.0 - Section 3. Other Claims MAY also be returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+components:
+  schemas:
+    ConfigResponse:
+      type: object
+      properties:
+        issuer:
+          type: string
+        mutual_tls_sender_constrained_access_tokens:
+          type: boolean
+        request_parameter_supported:
+          type: boolean
+        authorization_endpoint:
+          type: string
+        token_endpoint:
+          type: string
+        userinfo_endpoint:
+          type: string
+        revocation_endpoint:
+          type: string
+        registration_endpoint:
+          type: string
+        jwks_uri:
+          type: string
+        request_uri_parameter_supported:
+          type: boolean
+        claims_parameter_supported:
+          type: boolean
+        require_request_uri_registration:
+          type: boolean
+        response_types_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        response_modes_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        display_values_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        subject_types_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        scopes_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        claims_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        claim_types_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+        token_endpoint_auth_methods_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        token_endpoint_auth_signing_alg_values_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        revocation_endpoint_auth_methods_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        revocation_endpoint_auth_signing_alg_values_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        code_challenge_methods_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        id_token_signing_alg_values_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        userinfo_signing_alg_values_supported:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+externalDocs:
+  description: OpenID Connect 1.0 specifications
+  url: https://openid.net/connect/

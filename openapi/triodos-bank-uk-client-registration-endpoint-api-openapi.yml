@@ -1,0 +1,1035 @@
+openapi: 3.2.0
+info:
+  title: Triodos Auth service Client Registration Endpoint API
+  description: Triodos Auth service
+  termsOfService: https://www.triodos.com
+  contact:
+    name: Triodos Support
+    url: https://www.triodos.com
+    email: info@triodos.com
+  license:
+    name: Creative Commons Attribution 4.0 International Public License
+    url: https://creativecommons.org/licenses/by/4.0/
+  version: '1.0'
+servers:
+- url: https://xs2a-sandbox.triodos.com/auth
+  description: Triodos Auth Sandbox
+tags:
+- name: Client Registration Endpoint
+  description: The Client Registration Endpoint performs registration of the client.
+  externalDocs:
+    description: OpenID Connect Dynamic Client Registration 1.0 - Chapter 3 Client Registration Endpoint
+    url: https://openid.net/specs/openid-connect-registration-1_0.html
+paths:
+  /{tenant}/v1/registration:
+    post:
+      tags:
+      - Client Registration Endpoint
+      summary: Register client
+      description: The Client Registration Endpoint is an OAuth 2.0 Protected Resource through which a new Client registration can be requested. The OpenID Provider requires an Initial Access Token that is provisioned in the service the client wants to access, to restrict registration requests to only authorized Clients or developers.
+      operationId: authorizePost_1
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer access token.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              required:
+              - redirect_uris
+              type: object
+              properties:
+                sector_identifier_uri:
+                  type: string
+                  description: This parameter defines the sector identifier URI.
+                redirect_uris:
+                  type: array
+                  description: This parameter defines the used redirect URIs.
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Upon successful registration, the Client Registration Endpoint returns the newly-created Client Identifier and a Client Secret, along with all registered Metadata about this Client, including any fields provisioned by the Authorization Server itself. The Authorization Server MAY reject or replace any of the Client's requested field values and substitute them with suitable values. If this happens, the Authorization Server MUST include these fields in the response to the Client. An Authorization Server MAY ignore values provided by the client, and MUST ignore any fields sent by the Client that it does not understand.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCClientInformation'
+        '401':
+          description: invalid_request, access_denied or invalid_token
+components:
+  schemas:
+    Secret:
+      type: object
+      properties:
+        value:
+          type: string
+        expirationDate:
+          type: string
+          format: date-time
+        sha256:
+          type: string
+          format: byte
+        valueBytes:
+          type: string
+          format: byte
+    SoftwareID:
+      type: object
+      properties:
+        value:
+          type: string
+    TokenTypeURI:
+      type: object
+      properties:
+        uri:
+          type: string
+          format: uri
+    HashAlgorithm:
+      type: object
+      properties:
+        value:
+          type: string
+    ClientRegistrationType:
+      type: object
+      properties:
+        value:
+          type: string
+    JWEAlgorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    KeyType:
+      type: object
+      properties:
+        value:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    AuthorizationDetail:
+      type: object
+      properties:
+        identifier:
+          $ref: '#/components/schemas/Identifier'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+        type:
+          $ref: '#/components/schemas/AuthorizationType'
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        dataTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataType'
+        privileges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Privilege'
+    ClientID:
+      type: object
+      properties:
+        value:
+          type: string
+    Identifier:
+      type: object
+      properties:
+        value:
+          type: string
+    ClientAuthenticationMethod:
+      type: object
+      properties:
+        value:
+          type: string
+    Action:
+      type: object
+      properties:
+        value:
+          type: string
+    JWTClaimsSet:
+      type: object
+      properties:
+        claims:
+          type: object
+          additionalProperties:
+            type: object
+        expirationTime:
+          type: string
+          format: date-time
+        issuer:
+          type: string
+        subject:
+          type: string
+        audience:
+          type: array
+          items:
+            type: string
+        notBeforeTime:
+          type: string
+          format: date-time
+        issueTime:
+          type: string
+          format: date-time
+        jwtid:
+          type: string
+    Location:
+      type: object
+      properties:
+        value:
+          type: string
+        uri:
+          type: string
+          format: uri
+    Value:
+      type: object
+      properties:
+        value:
+          type: string
+    JWSHeader:
+      type: object
+      properties:
+        customParams:
+          type: object
+          additionalProperties:
+            type: object
+        parsedBase64URL:
+          $ref: '#/components/schemas/Base64URL'
+        jwk:
+          $ref: '#/components/schemas/JWK'
+        algorithm:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        base64URLEncodePayload:
+          type: boolean
+        includedParams:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        keyID:
+          type: string
+        jwkurl:
+          type: string
+          format: uri
+        x509CertURL:
+          type: string
+          format: uri
+        x509CertThumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertSHA256Thumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertChain:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64'
+        type:
+          $ref: '#/components/schemas/JOSEObjectType'
+        contentType:
+          type: string
+        criticalParams:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    GrantType:
+      type: object
+      properties:
+        value:
+          type: string
+        shortName:
+          type: string
+        scopeRequirementInTokenRequest:
+          type: string
+          enum:
+          - REQUIRED
+          - OPTIONAL
+          - NOT_ALLOWED
+        requestParameterNames:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    JOSEObjectType:
+      type: object
+      properties:
+        type:
+          type: string
+    Base64URL:
+      type: object
+    OIDCClientInformation:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ClientID'
+        metadata:
+          $ref: '#/components/schemas/ClientMetadata'
+        secret:
+          $ref: '#/components/schemas/Secret'
+        registrationURI:
+          type: string
+          format: uri
+        oidcmetadata:
+          $ref: '#/components/schemas/OIDCClientMetadata'
+        registrationAccessToken:
+          $ref: '#/components/schemas/BearerAccessToken'
+        idissueDate:
+          type: string
+          format: date-time
+    ClientMetadata:
+      type: object
+      properties:
+        scope:
+          type: array
+          properties:
+            first:
+              $ref: '#/components/schemas/Value'
+            last:
+              $ref: '#/components/schemas/Value'
+            empty:
+              type: boolean
+          items:
+            $ref: '#/components/schemas/Value'
+        responseTypes:
+          uniqueItems: true
+          type: array
+          items:
+            type: array
+            properties:
+              empty:
+                type: boolean
+            items:
+              $ref: '#/components/schemas/Value'
+        grantTypes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/GrantType'
+        nameEntries:
+          type: object
+          additionalProperties:
+            type: string
+        logoURIEntries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        policyURIEntries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        signedJWKSetURI:
+          type: string
+          format: uri
+        requestObjectURIs:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uri
+        requestObjectJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        requestObjectJWEAlg:
+          $ref: '#/components/schemas/JWEAlgorithm'
+        requestObjectJWEEnc:
+          $ref: '#/components/schemas/EncryptionMethod'
+        softwareID:
+          $ref: '#/components/schemas/SoftwareID'
+        softwareVersion:
+          $ref: '#/components/schemas/SoftwareVersion'
+        softwareStatement:
+          $ref: '#/components/schemas/SignedJWT'
+        backChannelTokenDeliveryMode:
+          $ref: '#/components/schemas/BackChannelTokenDeliveryMode'
+        backChannelClientNotificationEndpoint:
+          type: string
+          format: uri
+        backChannelAuthRequestJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        clientRegistrationTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientRegistrationType'
+        organizationName:
+          type: string
+        customFields:
+          type: object
+          properties:
+            empty:
+              type: boolean
+          additionalProperties:
+            type: object
+        name:
+          type: string
+        uri:
+          type: string
+          format: uri
+        tlsclientCertificateBoundAccessTokens:
+          type: boolean
+        redirectionURIs:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uri
+        emailContacts:
+          type: array
+          items:
+            type: string
+        urientries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        tokenEndpointAuthJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        tlsclientAuthSubjectDN:
+          type: string
+        tlsclientAuthSanDNS:
+          type: string
+        tlsclientAuthSanURI:
+          type: string
+        tlsclientAuthSanIP:
+          type: string
+        tlsclientAuthSanEmail:
+          type: string
+        dpoPBoundAccessTokens:
+          type: boolean
+        authorizationJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        authorizationJWEAlg:
+          $ref: '#/components/schemas/JWEAlgorithm'
+        authorizationJWEEnc:
+          $ref: '#/components/schemas/EncryptionMethod'
+        authorizationDetailsTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationType'
+        logoURI:
+          type: string
+          format: uri
+        policyURI:
+          type: string
+          format: uri
+        termsOfServiceURI:
+          type: string
+          format: uri
+        termsOfServiceURIEntries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        jwkset:
+          $ref: '#/components/schemas/JWKSet'
+        tokenEndpointAuthMethod:
+          $ref: '#/components/schemas/ClientAuthenticationMethod'
+        jwksetURI:
+          type: string
+          format: uri
+        supportsBackChannelUserCodeParam:
+          type: boolean
+          writeOnly: true
+        redirectionURI:
+          type: string
+          format: uri
+        redirectionURIStrings:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        mutualTLSSenderConstrainedAccessTokens:
+          type: boolean
+    KeyRevocation:
+      type: object
+      properties:
+        reason:
+          $ref: '#/components/schemas/Reason'
+        revocationTime:
+          type: string
+          format: date-time
+    Base64:
+      type: object
+    Privilege:
+      type: object
+      properties:
+        value:
+          type: string
+    DataType:
+      type: object
+      properties:
+        value:
+          type: string
+    JWSAlgorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    KeyUse:
+      type: object
+      properties:
+        value:
+          type: string
+    OIDCClientMetadata:
+      type: object
+      properties:
+        scope:
+          type: array
+          properties:
+            first:
+              $ref: '#/components/schemas/Value'
+            last:
+              $ref: '#/components/schemas/Value'
+            empty:
+              type: boolean
+          items:
+            $ref: '#/components/schemas/Value'
+        responseTypes:
+          uniqueItems: true
+          type: array
+          items:
+            type: array
+            properties:
+              empty:
+                type: boolean
+            items:
+              $ref: '#/components/schemas/Value'
+        grantTypes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/GrantType'
+        nameEntries:
+          type: object
+          additionalProperties:
+            type: string
+        logoURIEntries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        policyURIEntries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        signedJWKSetURI:
+          type: string
+          format: uri
+        requestObjectURIs:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uri
+        requestObjectJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        requestObjectJWEAlg:
+          $ref: '#/components/schemas/JWEAlgorithm'
+        requestObjectJWEEnc:
+          $ref: '#/components/schemas/EncryptionMethod'
+        softwareID:
+          $ref: '#/components/schemas/SoftwareID'
+        softwareVersion:
+          $ref: '#/components/schemas/SoftwareVersion'
+        softwareStatement:
+          $ref: '#/components/schemas/SignedJWT'
+        backChannelTokenDeliveryMode:
+          $ref: '#/components/schemas/BackChannelTokenDeliveryMode'
+        backChannelClientNotificationEndpoint:
+          type: string
+          format: uri
+        backChannelAuthRequestJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        clientRegistrationTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientRegistrationType'
+        organizationName:
+          type: string
+        customFields:
+          type: object
+          properties:
+            empty:
+              type: boolean
+          additionalProperties:
+            type: object
+        applicationType:
+          type: string
+          enum:
+          - native
+          - web
+        subjectType:
+          type: string
+          enum:
+          - pairwise
+          - public
+          - ephemeral
+        sectorIDURI:
+          type: string
+          format: uri
+        userInfoJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        userInfoJWEAlg:
+          $ref: '#/components/schemas/JWEAlgorithm'
+        userInfoJWEEnc:
+          $ref: '#/components/schemas/EncryptionMethod'
+        defaultMaxAge:
+          type: integer
+          format: int32
+        defaultACRs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ACR'
+        initiateLoginURI:
+          type: string
+          format: uri
+        frontChannelLogoutURI:
+          type: string
+          format: uri
+        backChannelLogoutURI:
+          type: string
+          format: uri
+        attachmentDigestAlg:
+          $ref: '#/components/schemas/HashAlgorithm'
+        idtokenJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        idtokenJWEAlg:
+          $ref: '#/components/schemas/JWEAlgorithm'
+        idtokenJWEEnc:
+          $ref: '#/components/schemas/EncryptionMethod'
+        postLogoutRedirectionURIs:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uri
+        name:
+          type: string
+        uri:
+          type: string
+          format: uri
+        tlsclientCertificateBoundAccessTokens:
+          type: boolean
+        redirectionURIs:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uri
+        emailContacts:
+          type: array
+          items:
+            type: string
+        urientries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        tokenEndpointAuthJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        tlsclientAuthSubjectDN:
+          type: string
+        tlsclientAuthSanDNS:
+          type: string
+        tlsclientAuthSanURI:
+          type: string
+        tlsclientAuthSanIP:
+          type: string
+        tlsclientAuthSanEmail:
+          type: string
+        dpoPBoundAccessTokens:
+          type: boolean
+        authorizationJWSAlg:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        authorizationJWEAlg:
+          $ref: '#/components/schemas/JWEAlgorithm'
+        authorizationJWEEnc:
+          $ref: '#/components/schemas/EncryptionMethod'
+        authorizationDetailsTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationType'
+        logoURI:
+          type: string
+          format: uri
+        policyURI:
+          type: string
+          format: uri
+        termsOfServiceURI:
+          type: string
+          format: uri
+        termsOfServiceURIEntries:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        jwkset:
+          $ref: '#/components/schemas/JWKSet'
+        tokenEndpointAuthMethod:
+          $ref: '#/components/schemas/ClientAuthenticationMethod'
+        jwksetURI:
+          type: string
+          format: uri
+        supportsBackChannelUserCodeParam:
+          type: boolean
+          writeOnly: true
+        redirectionURI:
+          type: string
+          format: uri
+        redirectionURIStrings:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        mutualTLSSenderConstrainedAccessTokens:
+          type: boolean
+    SignedJWT:
+      type: object
+      properties:
+        payload:
+          $ref: '#/components/schemas/Payload'
+        parsedParts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64URL'
+        header:
+          $ref: '#/components/schemas/JWSHeader'
+        signature:
+          $ref: '#/components/schemas/Base64URL'
+        state:
+          type: string
+          enum:
+          - UNSIGNED
+          - SIGNED
+          - VERIFIED
+        jwtclaimsSet:
+          $ref: '#/components/schemas/JWTClaimsSet'
+        parsedString:
+          type: string
+        signingInput:
+          type: string
+          format: byte
+    JWKSet:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/JWK'
+        empty:
+          type: boolean
+        additionalMembers:
+          type: object
+          additionalProperties:
+            type: object
+    Algorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    EncryptionMethod:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    Payload:
+      type: object
+      properties:
+        origin:
+          type: string
+          enum:
+          - JSON
+          - STRING
+          - BYTE_ARRAY
+          - BASE64URL
+          - JWS_OBJECT
+          - SIGNED_JWT
+    SoftwareVersion:
+      type: object
+      properties:
+        value:
+          type: string
+    AccessTokenType:
+      type: object
+      properties:
+        value:
+          type: string
+    BearerAccessToken:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/AccessTokenType'
+        lifetime:
+          type: integer
+          format: int64
+        scope:
+          type: array
+          properties:
+            first:
+              $ref: '#/components/schemas/Value'
+            last:
+              $ref: '#/components/schemas/Value'
+            empty:
+              type: boolean
+          items:
+            $ref: '#/components/schemas/Value'
+        authorizationDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationDetail'
+        issuedTokenType:
+          $ref: '#/components/schemas/TokenTypeURI'
+        parameterNames:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        customParameters:
+          type: object
+          additionalProperties:
+            type: object
+    Reason:
+      type: object
+      properties:
+        value:
+          type: string
+    AuthorizationType:
+      type: object
+      properties:
+        value:
+          type: string
+        uri:
+          type: string
+          format: uri
+    ACR:
+      type: object
+      properties:
+        value:
+          type: string
+    JWK:
+      type: object
+      properties:
+        keyStore:
+          type: object
+          properties:
+            type:
+              type: string
+            provider:
+              type: object
+              additionalProperties:
+                type: string
+        expirationTime:
+          type: string
+          format: date-time
+        private:
+          type: boolean
+        algorithm:
+          $ref: '#/components/schemas/Algorithm'
+        keyType:
+          $ref: '#/components/schemas/KeyType'
+        keyID:
+          type: string
+        x509CertURL:
+          type: string
+          format: uri
+        x509CertThumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertSHA256Thumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertChain:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64'
+        notBeforeTime:
+          type: string
+          format: date-time
+        issueTime:
+          type: string
+          format: date-time
+        keyUse:
+          $ref: '#/components/schemas/KeyUse'
+        keyOperations:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - sign
+            - verify
+            - encrypt
+            - decrypt
+            - wrapKey
+            - unwrapKey
+            - deriveKey
+            - deriveBits
+        parsedX509CertChain:
+          type: array
+          items:
+            type: object
+            properties:
+              subjectDN:
+                type: object
+                properties:
+                  name:
+                    type: string
+              issuerDN:
+                type: object
+                properties:
+                  name:
+                    type: string
+              tbscertificate:
+                type: string
+                format: byte
+              sigAlgName:
+                type: string
+              sigAlgOID:
+                type: string
+              issuerUniqueID:
+                type: array
+                items:
+                  type: boolean
+              subjectUniqueID:
+                type: array
+                items:
+                  type: boolean
+              subjectAlternativeNames:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: object
+              issuerAlternativeNames:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: object
+              sigAlgParams:
+                type: string
+                format: byte
+              notBefore:
+                type: string
+                format: date-time
+              notAfter:
+                type: string
+                format: date-time
+              extendedKeyUsage:
+                type: array
+                items:
+                  type: string
+              keyUsage:
+                type: array
+                items:
+                  type: boolean
+              signature:
+                type: string
+                format: byte
+              basicConstraints:
+                type: integer
+                format: int32
+              issuerX500Principal:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  encoded:
+                    type: string
+                    format: byte
+              subjectX500Principal:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  encoded:
+                    type: string
+                    format: byte
+              version:
+                type: integer
+                format: int32
+              serialNumber:
+                type: integer
+              nonCriticalExtensionOIDs:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+              criticalExtensionOIDs:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+              type:
+                type: string
+              encoded:
+                type: string
+                format: byte
+              publicKey:
+                type: object
+                properties:
+                  encoded:
+                    type: string
+                    format: byte
+                  format:
+                    type: string
+                  algorithm:
+                    type: string
+        keyRevocation:
+          $ref: '#/components/schemas/KeyRevocation'
+        requiredParams:
+          type: object
+          additionalProperties:
+            type: object
+    BackChannelTokenDeliveryMode:
+      type: object
+      properties:
+        value:
+          type: string
+externalDocs:
+  description: OpenID Connect 1.0 specifications
+  url: https://openid.net/connect/

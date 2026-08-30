@@ -1,0 +1,4807 @@
+openapi: 3.2.0
+info:
+  title: Triodos XS2A BG service Payment Initiation Service API
+  description: Triodos XS2A BG service
+  termsOfService: https://www.triodos.com
+  contact:
+    name: Triodos Support
+    url: https://www.triodos.com
+    email: info@triodos.com
+  license:
+    name: Creative Commons Attribution 4.0 International Public License
+    url: https://creativecommons.org/licenses/by/4.0/
+  version: '1.1'
+servers:
+- url: https://xs2a-sandbox.triodos.com/xs2a-bg
+  description: Triodos XS2A Sandbox
+tags:
+- name: Payment Initiation Service
+  description: This service may be used by a PISP to initiate a single payment on behalf of a PSU using a given account of that PSU. The account is managed by the ASPSP providing the XS2A Interface. Functionality and restrictions of this service comply with the requirements defined by article 66 of PSD2.
+  externalDocs:
+    description: 'Berlin Group XS2A Implementation Version 1.3 - Chapter 5: Payment Initiation Service'
+    url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf
+paths:
+  /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisations
+      description: Will deliver an array of resource ids of all generated authorisation sub-resources.
+      operationId: getAuthorisations
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create authorisation
+      description: Creates a payment authorisation sub-resource.
+      operationId: createAuthorisation
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisation status
+      description: Checks the SCA status of an authorisation sub-resource.
+      operationId: getAuthorisation
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Submit payment authorisation
+      description: Submits an access token to authorise a payment initiation.
+      operationId: submitAuthorisation
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Authorization
+        in: header
+        description: OAuth2 access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment SCA status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisations
+      description: Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+      operationId: getCancellationAuthorisations
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to get cancellation authorisations for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create cancellation authorisation
+      description: Creates a payment cancellation authorisation sub-resource.
+      operationId: createCancellationAuthorisation
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create cancellation authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment cancellation authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisation status
+      description: Checks the SCA status of a cancellation authorisation sub-resource.
+      operationId: getCancellationAuthorisation
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Update payment cancellation authorisation with access token
+      description: Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+      operationId: submitCancellationAuthorisation
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to cancel
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid/ Payment status is invalid/ Payment failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has insufficient rights to authorize the payment/ Authorization timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP/ Given currency is not supported for given payment product/ Given IBAN belongs to product with unsupported producttype/ Given IBAN belongs to product that is blocked or inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}:
+    delete:
+      tags:
+      - Payment Initiation Service
+      summary: Cancel payment
+      description: If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+      operationId: deletePayment
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '202':
+          description: Cancellation authorization sub-resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/bulk-payments/sepa-credit-transfers/{resource-id}/status:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get payment status
+      description: Can check the status of a payment initiation.
+      operationId: getStatus
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aStatusRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/bulk-payments/sepa-credit-transfers:
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Initiate Sepa Bulk Payment
+      description: Creates a Sepa bulk payment initiation request and corresponding authorisation sub-resource.
+      operationId: initiateSepaBulkPayment
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: The forwarded IP Address header field consists of the corresponding HTTP request IP Address field between PSU and TPP.
+        required: true
+        schema:
+          type: string
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: Must be empty, sessions are not supported.
+        schema:
+          type: string
+      - name: TPP-Signature-Certificate
+        in: header
+        description: The certificate used for signing the request, in base64 encoding.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: PAIN.001.001.03 or PAIN.001.001.09 formatted bulk payment request.
+        content:
+          text/xml:
+            schema:
+              type: string
+          application/xml:
+            schema:
+              type: string
+        required: true
+      responses:
+        '201':
+          description: Payment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: Missing or invalid body (e.g. invalid IBAN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: The addressed payment product is not available for the PSU
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: No product found for given IBAN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisations
+      description: Will deliver an array of resource ids of all generated authorisation sub-resources.
+      operationId: getAuthorisations_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create authorisation
+      description: Creates a payment authorisation sub-resource.
+      operationId: createAuthorisation_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisation status
+      description: Checks the SCA status of an authorisation sub-resource.
+      operationId: getAuthorisation_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Submit payment authorisation
+      description: Submits an access token to authorise a payment initiation.
+      operationId: submitAuthorisation_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Authorization
+        in: header
+        description: OAuth2 access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment SCA status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/cancellation-authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisations
+      description: Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+      operationId: getCancellationAuthorisations_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to get cancellation authorisations for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create cancellation authorisation
+      description: Creates a payment cancellation authorisation sub-resource.
+      operationId: createCancellationAuthorisation_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create cancellation authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment cancellation authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisation status
+      description: Checks the SCA status of a cancellation authorisation sub-resource.
+      operationId: getCancellationAuthorisation_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Update payment cancellation authorisation with access token
+      description: Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+      operationId: submitCancellationAuthorisation_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to cancel
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid/ Payment status is invalid/ Payment failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has insufficient rights to authorize the payment/ Authorization timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP/ Given currency is not supported for given payment product/ Given IBAN belongs to product with unsupported producttype/ Given IBAN belongs to product that is blocked or inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}:
+    delete:
+      tags:
+      - Payment Initiation Service
+      summary: Cancel payment
+      description: If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+      operationId: deletePayment_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '202':
+          description: Cancellation authorization sub-resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/cross-border-credit-transfers/{resource-id}/status:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get payment status
+      description: Can check the status of a payment initiation.
+      operationId: getStatus_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aStatusRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/cross-border-credit-transfers:
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Initiate Cross Border payment
+      description: Creates a Cross Border payment initiation request and corresponding authorisation sub-resource.
+      operationId: initiateCrossBorderPayment
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: The forwarded IP Address header field consists of the corresponding HTTP request IP Address field between PSU and TPP.
+        required: true
+        schema:
+          type: string
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: Must be empty, sessions are not supported.
+        schema:
+          type: string
+      - name: TPP-Signature-Certificate
+        in: header
+        description: The certificate used for signing the request, in base64 encoding.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Payment request.
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: uuid
+        required: true
+      responses:
+        '501':
+          description: Cross border non-SEPA payments are not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisations
+      description: Will deliver an array of resource ids of all generated authorisation sub-resources.
+      operationId: getAuthorisations_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create authorisation
+      description: Creates a payment authorisation sub-resource.
+      operationId: createAuthorisation_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisation status
+      description: Checks the SCA status of an authorisation sub-resource.
+      operationId: getAuthorisation_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Submit payment authorisation
+      description: Submits an access token to authorise a payment initiation.
+      operationId: submitAuthorisation_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Authorization
+        in: header
+        description: OAuth2 access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment SCA status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisations
+      description: Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+      operationId: getCancellationAuthorisations_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to get cancellation authorisations for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create cancellation authorisation
+      description: Creates a payment cancellation authorisation sub-resource.
+      operationId: createCancellationAuthorisation_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create cancellation authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment cancellation authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisation status
+      description: Checks the SCA status of a cancellation authorisation sub-resource.
+      operationId: getCancellationAuthorisation_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Update payment cancellation authorisation with access token
+      description: Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+      operationId: submitCancellationAuthorisation_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to cancel
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid/ Payment status is invalid/ Payment failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has insufficient rights to authorize the payment/ Authorization timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP/ Given currency is not supported for given payment product/ Given IBAN belongs to product with unsupported producttype/ Given IBAN belongs to product that is blocked or inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}:
+    delete:
+      tags:
+      - Payment Initiation Service
+      summary: Cancel payment
+      description: If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+      operationId: deletePayment_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '202':
+          description: Cancellation authorization sub-resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/sepa-credit-transfers/{resource-id}/status:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get payment status
+      description: Can check the status of a payment initiation.
+      operationId: getStatus_2
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aStatusRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/sepa-credit-transfers:
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Initiate Sepa payment
+      description: Creates a Sepa payment initiation request and corresponding authorisation sub-resource.
+      operationId: initiateSepaPayment
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: The forwarded IP Address header field consists of the corresponding HTTP request IP Address field between PSU and TPP.
+        required: true
+        schema:
+          type: string
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: Must be empty, sessions are not supported.
+        schema:
+          type: string
+      - name: TPP-Signature-Certificate
+        in: header
+        description: The certificate used for signing the request, in base64 encoding.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Payment request.
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: uuid
+        required: true
+      responses:
+        '201':
+          description: Payment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: Missing or invalid body (e.g. invalid IBAN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: The addressed payment product is not available for the PSU
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: No product found for given IBAN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisations
+      description: Will deliver an array of resource ids of all generated authorisation sub-resources.
+      operationId: getAuthorisations_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create authorisation
+      description: Creates a payment authorisation sub-resource.
+      operationId: createAuthorisation_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisation status
+      description: Checks the SCA status of an authorisation sub-resource.
+      operationId: getAuthorisation_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Submit payment authorisation
+      description: Submits an access token to authorise a payment initiation.
+      operationId: submitAuthorisation_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Authorization
+        in: header
+        description: OAuth2 access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment SCA status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisations
+      description: Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+      operationId: getCancellationAuthorisations_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to get cancellation authorisations for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create cancellation authorisation
+      description: Creates a payment cancellation authorisation sub-resource.
+      operationId: createCancellationAuthorisation_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create cancellation authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment cancellation authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisation status
+      description: Checks the SCA status of a cancellation authorisation sub-resource.
+      operationId: getCancellationAuthorisation_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Update payment cancellation authorisation with access token
+      description: Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+      operationId: submitCancellationAuthorisation_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to cancel
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid/ Payment status is invalid/ Payment failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has insufficient rights to authorize the payment/ Authorization timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP/ Given currency is not supported for given payment product/ Given IBAN belongs to product with unsupported producttype/ Given IBAN belongs to product that is blocked or inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}:
+    delete:
+      tags:
+      - Payment Initiation Service
+      summary: Cancel payment
+      description: If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+      operationId: deletePayment_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '202':
+          description: Cancellation authorization sub-resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/uk-domestic-transfers/{resource-id}/status:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get payment status
+      description: Can check the status of a payment initiation.
+      operationId: getStatus_3
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aStatusRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/payments/uk-domestic-transfers:
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Initiate UK Domestic payment
+      description: Creates a UK Domestic payment initiation request and corresponding authorisation sub-resource.
+      operationId: initiateUkDomesticPayment
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: The forwarded IP Address header field consists of the corresponding HTTP request IP Address field between PSU and TPP.
+        required: true
+        schema:
+          type: string
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: Must be empty, sessions are not supported.
+        schema:
+          type: string
+      - name: TPP-Signature-Certificate
+        in: header
+        description: The certificate used for signing the request, in base64 encoding.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Payment request.
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: uuid
+        required: true
+      responses:
+        '201':
+          description: Payment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: Missing or invalid body (e.g. invalid IBAN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: The addressed payment product is not available for the PSU
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: No product found for given IBAN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisations
+      description: Will deliver an array of resource ids of all generated authorisation sub-resources.
+      operationId: getAuthorisations_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create authorisation
+      description: Creates a payment authorisation sub-resource.
+      operationId: createAuthorisation_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisation status
+      description: Checks the SCA status of an authorisation sub-resource.
+      operationId: getAuthorisation_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Submit payment authorisation
+      description: Submits an access token to authorise a payment initiation.
+      operationId: submitAuthorisation_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Authorization
+        in: header
+        description: OAuth2 access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment SCA status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisations
+      description: Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+      operationId: getCancellationAuthorisations_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to get cancellation authorisations for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create cancellation authorisation
+      description: Creates a payment cancellation authorisation sub-resource.
+      operationId: createCancellationAuthorisation_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create cancellation authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment cancellation authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisation status
+      description: Checks the SCA status of a cancellation authorisation sub-resource.
+      operationId: getCancellationAuthorisation_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Update payment cancellation authorisation with access token
+      description: Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+      operationId: submitCancellationAuthorisation_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to cancel
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid/ Payment status is invalid/ Payment failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has insufficient rights to authorize the payment/ Authorization timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP/ Given currency is not supported for given payment product/ Given IBAN belongs to product with unsupported producttype/ Given IBAN belongs to product that is blocked or inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}:
+    delete:
+      tags:
+      - Payment Initiation Service
+      summary: Cancel payment
+      description: If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+      operationId: deletePayment_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '202':
+          description: Cancellation authorization sub-resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/sepa-credit-transfers/{resource-id}/status:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get payment status
+      description: Can check the status of a payment initiation.
+      operationId: getStatus_4
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aStatusRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/sepa-credit-transfers:
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Initiate Sepa Periodic Payment
+      description: Creates a Sepa periodic payment initiation request and corresponding authorisation sub-resource.
+      operationId: initiateSepaPeriodicPayment
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: The forwarded IP Address header field consists of the corresponding HTTP request IP Address field between PSU and TPP.
+        required: true
+        schema:
+          type: string
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: Must be empty, sessions are not supported.
+        schema:
+          type: string
+      - name: TPP-Signature-Certificate
+        in: header
+        description: The certificate used for signing the request, in base64 encoding.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Periodic payment request.
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: uuid
+        required: true
+      responses:
+        '201':
+          description: Payment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: Missing or invalid body (e.g. invalid IBAN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: The addressed payment product is not available for the PSU
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: No product found for given IBAN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisations
+      description: Will deliver an array of resource ids of all generated authorisation sub-resources.
+      operationId: getAuthorisations_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create authorisation
+      description: Creates a payment authorisation sub-resource.
+      operationId: createAuthorisation_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get authorisation status
+      description: Checks the SCA status of an authorisation sub-resource.
+      operationId: getAuthorisation_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Submit payment authorisation
+      description: Submits an access token to authorise a payment initiation.
+      operationId: submitAuthorisation_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Authorization
+        in: header
+        description: OAuth2 access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment SCA status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisations
+      description: Will deliver an array of resource ids of all generated cancellation authorisation sub-resources.
+      operationId: getCancellationAuthorisations_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to get cancellation authorisations for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisations returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationsRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Create cancellation authorisation
+      description: Creates a payment cancellation authorisation sub-resource.
+      operationId: createCancellationAuthorisation_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to create cancellation authorisation sub-resource for.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Payment cancellation authorisation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/cancellation-authorisations/{authorisation-id}:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get cancellation authorisation status
+      description: Checks the SCA status of a cancellation authorisation sub-resource.
+      operationId: getCancellationAuthorisation_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cancellation authorisation status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationStatusRequestResponse'
+        '400':
+          description: AuthorisationID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+    put:
+      tags:
+      - Payment Initiation Service
+      summary: Update payment cancellation authorisation with access token
+      description: Updates the payment cancellation data on the server by PSU data, if requested by the ASPSP. Also cancels the payment if sufficient privileges are present.
+      operationId: submitCancellationAuthorisation_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment to cancel
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: authorisation-id
+        in: path
+        description: ID of the cancellation authorisation sub-resource
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAuthorisationRequestResponse'
+        '400':
+          description: PaymentID is invalid/ Payment status is invalid/ Payment failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has insufficient rights to authorize the payment/ Authorization timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP/ Given currency is not supported for given payment product/ Given IBAN belongs to product with unsupported producttype/ Given IBAN belongs to product that is blocked or inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}:
+    delete:
+      tags:
+      - Payment Initiation Service
+      summary: Cancel payment
+      description: If the payment is not authorized yet, the payment request is directly cancelled. Otherwise a cancellation authorization sub-resource is created.
+      operationId: deletePayment_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Payment cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '202':
+          description: Cancellation authorization sub-resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/uk-domestic-transfers/{resource-id}/status:
+    get:
+      tags:
+      - Payment Initiation Service
+      summary: Get payment status
+      description: Can check the status of a payment initiation.
+      operationId: getStatus_5
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: resource-id
+        in: path
+        description: ID of the payment.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Payment status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aStatusRequestResponse'
+        '400':
+          description: PaymentID is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: PaymentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v1/periodic-payments/uk-domestic-transfers:
+    post:
+      tags:
+      - Payment Initiation Service
+      summary: Initiate UK Domestic Periodic Payment
+      description: Creates a UK Domestic periodic payment initiation request and corresponding authorisation sub-resource.
+      operationId: initiateUkDomesticPeriodicPayment
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: The forwarded IP Address header field consists of the corresponding HTTP request IP Address field between PSU and TPP.
+        required: true
+        schema:
+          type: string
+      - name: TPP-Redirect-URI
+        in: header
+        description: URI of the TPP, where the transaction flow shall be redirected to after a Redirect.
+        required: true
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: Must be empty, sessions are not supported.
+        schema:
+          type: string
+      - name: TPP-Signature-Certificate
+        in: header
+        description: The certificate used for signing the request, in base64 encoding.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Periodic payment request.
+        content:
+          '*/*':
+            schema:
+              type: string
+              format: uuid
+        required: true
+      responses:
+        '201':
+          description: Payment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aPaymentRequestResponse'
+        '400':
+          description: Missing or invalid body (e.g. invalid IBAN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: The addressed payment product is not available for the PSU
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: No product found for given IBAN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+components:
+  schemas:
+    Xs2aAccountReference:
+      type: object
+      properties:
+        iban:
+          type: string
+          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
+        foreignAccountNumber:
+          type: string
+          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
+        ukSortCode:
+          type: string
+          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
+        ukAccountNumber:
+          type: string
+        currency:
+          type: string
+          description: Account currency
+      description: PSU's account number.
+    Xs2aStatusRequestResponse:
+      required:
+      - transactionStatus
+      type: object
+      properties:
+        transactionStatus:
+          type: string
+          description: Transaction status.
+          enum:
+          - RCVD
+          - PDNG
+          - ACCP
+          - ACTC
+          - ACWC
+          - ACWP
+          - ACSP
+          - ACSC
+          - RJCT
+          - CANC
+          - PATC
+          - ACFC
+        fundsAvailable:
+          type: boolean
+          description: This data element is contained, if a funds check has been performed and if the transactionStatus is "ACTC", "ACWC" or "ACCP".
+    Xs2aAuthorisationsRequestResponse:
+      required:
+      - authorisationIds
+      type: object
+      properties:
+        authorisationIds:
+          type: array
+          description: List of authorisation request ids.
+          items:
+            type: string
+            description: List of authorisation request ids.
+            format: uuid
+    Xs2aAuthorisationStatusRequestResponse:
+      required:
+      - scaStatus
+      type: object
+      properties:
+        scaStatus:
+          type: string
+          description: Status of the authorisation request.
+          enum:
+          - received
+          - psuIdentified
+          - psuAuthenticated
+          - scaMethodSelected
+          - started
+          - unconfirmed
+          - finalised
+          - failed
+          - exempted
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
+    Xs2aAuthorisationRequestResponseLinks:
+      type: object
+      properties:
+        scaOAuth:
+          type: string
+          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
+        scaRedirect:
+          type: string
+          description: A link to the OAuth2 authorization resource.
+        scaStatus:
+          type: string
+          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
+        self:
+          type: string
+          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
+        confirmation:
+          type: string
+          description: The link to the authorisation sub-resource.
+        status:
+          type: string
+          description: The link to retrieve the transaction status of a resource.
+    TppMessage:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Additional explaining text.
+        code:
+          type: string
+          description: Message code.
+          enum:
+          - CERTIFICATE_INVALID
+          - CERTIFICATE_EXPIRED
+          - CERTIFICATE_BLOCKED
+          - CERTIFICATE_REVOKED
+          - CERTIFICATE_MISSING
+          - SIGNATURE_INVALID
+          - SIGNATURE_MISSING
+          - ROLE_INVALID
+          - FORMAT_ERROR
+          - PARAMETER_NOT_CONSISTENT
+          - PARAMETER_NOT_SUPPORTED
+          - PSU_CREDENTIALS_INVALID
+          - SERVICE_INVALID
+          - SERVICE_BLOCKED
+          - CORPORATE_ID_INVALID
+          - CONSENT_UNKNOWN
+          - CONSENT_INVALID
+          - CONSENT_EXPIRED
+          - TOKEN_UNKNOWN
+          - TOKEN_INVALID
+          - TOKEN_EXPIRED
+          - RESOURCE_UNKNOWN
+          - RESOURCE_EXPIRED
+          - RESOURCE_BLOCKED
+          - TIMESTAMP_INVALID
+          - PERIOD_INVALID
+          - SCA_METHOD_UNKNOWN
+          - SCA_INVALID
+          - STATUS_INVALID
+          - PRODUCT_INVALID
+          - PRODUCT_UNKNOWN
+          - PAYMENT_FAILED
+          - REQUIRED_KID_MISSING
+          - EXECUTION_DATE_INVALID
+          - CANCELLATION_INVALID
+          - BENEFICIARY_WHITELISTING_REQUIRED
+          - FUNDS_NOT_AVAILABLE
+          - CONTENT_INVALID
+          - SESSIONS_NOT_SUPPORTED
+          - ACCESS_EXCEEDED
+          - REQUESTED_FORMATS_INVALID
+          - CARD_INVALID
+          - NO_PIIS_ACTIVATION
+          - REFERENCE_MIX_INVALID
+          - REFERENCE_STATUS_INVALID
+        category:
+          type: string
+      description: List of messages.
+    Xs2aPaymentRequestResponseLinks:
+      type: object
+      properties:
+        scaOAuth:
+          type: string
+          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
+        scaRedirect:
+          type: string
+          description: A link to the OAuth2 authorization resource.
+        scaStatus:
+          type: string
+          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
+        self:
+          type: string
+          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
+        confirmation:
+          type: string
+          description: The link to the authorisation sub-resource.
+        status:
+          type: string
+          description: The link to retrieve the transaction status of a resource.
+    Xs2aPaymentRequestResponse:
+      required:
+      - _links
+      - authorisationId
+      - paymentId
+      - transactionStatus
+      type: object
+      properties:
+        transactionStatus:
+          type: string
+          description: Transaction status.
+          enum:
+          - RCVD
+          - PDNG
+          - ACCP
+          - ACTC
+          - ACWC
+          - ACWP
+          - ACSP
+          - ACSC
+          - RJCT
+          - CANC
+          - PATC
+          - ACFC
+        paymentId:
+          type: string
+          description: Transaction ID.
+        authorisationId:
+          type: string
+          description: ID of the corresponding authorisation subresource
+        debtorAccount:
+          $ref: '#/components/schemas/Xs2aAccountReference'
+        debtorName:
+          type: string
+          description: Debtor name.
+        _links:
+          $ref: '#/components/schemas/Xs2aPaymentRequestResponseLinks'
+    Xs2aAuthorisationRequestResponse:
+      type: object
+      properties:
+        scaStatus:
+          type: string
+          description: This data element is containing information about the status of the SCA method applied.
+          enum:
+          - received
+          - psuIdentified
+          - psuAuthenticated
+          - scaMethodSelected
+          - started
+          - unconfirmed
+          - finalised
+          - failed
+          - exempted
+        psuMessage:
+          type: string
+          description: Text to be displayed to the PSU.
+        authorisationId:
+          type: string
+          description: Resource identification of the authorisation sub-resource.
+        _links:
+          $ref: '#/components/schemas/Xs2aAuthorisationRequestResponseLinks'
+externalDocs:
+  description: Berlin Group XS2A Implementation Version 1.3
+  url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf

@@ -1,0 +1,745 @@
+openapi: 3.2.0
+info:
+  title: Triodos XS2A BG service Extended Account Information Service API
+  description: Triodos XS2A BG service
+  termsOfService: https://www.triodos.com
+  contact:
+    name: Triodos Support
+    url: https://www.triodos.com
+    email: info@triodos.com
+  license:
+    name: Creative Commons Attribution 4.0 International Public License
+    url: https://creativecommons.org/licenses/by/4.0/
+  version: '1.1'
+servers:
+- url: https://xs2a-sandbox.triodos.com/xs2a-bg
+  description: Triodos XS2A Sandbox
+tags:
+- name: Extended Account Information Service
+paths:
+  /{tenant}/v2/savings/{account-id}:
+    get:
+      tags:
+      - Extended Account Information Service
+      summary: Read Savings Account Details
+      description: "      Reads details about a savings account, with balances where required.\n      It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system.\n      The addressed details of this account depends then on the stored consent addressed by consentId, respectively the OAuth2 access token.\n"
+      operationId: getAccount_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: IP Address of the PSU if involved in the request.
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: ID of registered and authorized consent.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: account-id
+        in: path
+        description: ID of account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: withBalance
+        in: query
+        description: Not supported, should be unset
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Savings Account returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAccountResponse'
+        '400':
+          description: ConsentID invalid/ AccountID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has no access to the given account/ Consented product is blocked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: ConsentID not found, not registered for this TPP, wrong product Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: AccountID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v2/savings:
+    get:
+      tags:
+      - Extended Account Information Service
+      summary: Get accounts
+      description: Reads a list of savings accounts, with balances where required. It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system. The addressed list of accounts depends then on the PSU ID and the stored consent addressed by consentId, respectively the OAuth2 access token.
+      operationId: getAccounts_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: IP Address of the PSU if involved in the request.
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: ID of registered and authorized consent.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: withBalance
+        in: query
+        description: Not supported, should be unset
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Savings Accounts returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aAccountsResponse'
+        '400':
+          description: ConsentID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User does not have access to the consented accounts/ Consented products are blocked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: ConsentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v2/savings/{account-id}/balances:
+    get:
+      tags:
+      - Extended Account Information Service
+      summary: Get savings account balances
+      description: Reads savings account data from a given savings account addressed by "account-id".
+      operationId: getBalances_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: IP Address of the PSU if involved in the request.
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: ID of registered and authorized consent.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: account-id
+        in: path
+        description: ID of account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Balances returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aBalancesResponse'
+        '400':
+          description: ConsentUUID invalid/ AccountID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has no access to the given account/ Consented product is blocked/ Given consent does not provide access to balance of account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: ConsentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: AccountID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '429':
+          description: Too many requests - number of requests exceeds FrequencyPerDay of consent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+  /{tenant}/v2/savings/{account-id}/transactions:
+    get:
+      tags:
+      - Extended Account Information Service
+      summary: Get savings account transactions
+      description: Reads savings account data from a given saving account addressed by "account-id".
+      operationId: getTransactions_1
+      parameters:
+      - name: X-Request-ID
+        in: header
+        description: ID of the request, unique to the call, as determined by the initiating party.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      - name: Signature
+        in: header
+        description: A signature of the request by the TPP on application level.
+        required: true
+        schema:
+          type: string
+      - name: Digest
+        in: header
+        description: Digest contains a Hash of the message body, used for authentication of the request. The only hash algorithms that may be used to calculate the Digest within the context of this specification are SHA-256 and SHA-512.
+        required: true
+        schema:
+          type: string
+      - name: PSU-IP-Address
+        in: header
+        description: IP Address of the PSU if involved in the request.
+        schema:
+          type: string
+      - name: Consent-ID
+        in: header
+        description: ID of registered and authorized consent.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: account-id
+        in: path
+        description: ID of account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: bookingStatus
+        in: query
+        description: Permitted codes are "booked", "pending" and "both", mandated if no delta access is required.
+        schema:
+          type: string
+          enum:
+          - booked
+          - pending
+          - both
+          - information
+          - all
+      - name: dateFrom
+        in: query
+        description: Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required.
+        schema:
+          type: string
+          format: date
+      - name: dateTo
+        in: query
+        description: End date (inclusive the date dateTo) of the transaction list, default is now if not given.
+        schema:
+          type: string
+          format: date
+      - name: withBalance
+        in: query
+        description: Not supported, should be unset
+        schema:
+          type: boolean
+      - name: entryReferenceFrom
+        in: query
+        description: Not supported, should be unset
+        schema:
+          type: string
+      - name: deltaList
+        in: query
+        description: Not supported, should be unset
+        schema:
+          type: boolean
+      - name: edgeToken
+        in: query
+        description: Pagination edge token, to be used when paging through transactions
+        schema:
+          $ref: '#/components/schemas/Xs2aTransactionSearchCriteriaEdgeToken'
+      responses:
+        '200':
+          description: Transactions returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aTransactionsResponse'
+        '400':
+          description: ConsentID invalid/ AccountID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '401':
+          description: Invalid scope/ Invalid consent/ Given access token is not coupled to the given consent/ User has no access to the given account/ Consented product is blocked/ Given consent does not provide access to transactions of account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '403':
+          description: ConsentID not found, or not registered for this TPP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '404':
+          description: AccountID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+        '429':
+          description: Too many requests - number of requests exceeds FrequencyPerDay of consent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+components:
+  schemas:
+    Xs2aAccount:
+      type: object
+      properties:
+        iban:
+          type: string
+          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
+        foreignAccountNumber:
+          type: string
+          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
+        ukSortCode:
+          type: string
+          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
+        ukAccountNumber:
+          type: string
+        currency:
+          type: string
+          description: Account currency
+        resourceId:
+          type: string
+          description: This is the data element to be used in the path when retrieving data from a dedicated account, cp. Section 6.6.3 or Section 6.6.4 below. This shall be filled, if addressable resource are created by the ASPSP on the /accounts or /card-accounts endpoint.
+        cashAccountType:
+          type: string
+          description: ExternalCashAccountType1Code from ISO 20022
+          enum:
+          - CACC
+          - CASH
+          - CHAR
+          - CISH
+          - COMM
+          - CPAC
+          - LLSV
+          - LOAN
+          - MGLD
+          - MOMA
+          - NREX
+          - ODFT
+          - ONDP
+          - OTHR
+          - SACC
+          - SLRY
+          - SVGS
+          - TAXE
+          - TRAN
+          - TRAS
+        name:
+          type: string
+          description: Name of the account given by the bank or the PSU in Online-Banking
+        status:
+          type: string
+          description: 'Status of the account, will be equal to one of the following: [enabled, deleted, blocked]'
+          enum:
+          - enabled
+          - deleted
+          - blocked
+        _links:
+          $ref: '#/components/schemas/Xs2aAccountLinks'
+    Xs2aTransactionSearchCriteriaEdgeToken:
+      type: object
+      properties:
+        edgeTokenTransactionTimestamp:
+          type: string
+          format: date-time
+        edgeTokenTransactionID:
+          $ref: '#/components/schemas/ID'
+        bookingStatus:
+          type: string
+          enum:
+          - booked
+          - pending
+          - both
+          - information
+          - all
+        dateFrom:
+          type: string
+          format: date
+        dateTo:
+          type: string
+          format: date
+    ID:
+      type: object
+      properties:
+        temporaryKey:
+          type: boolean
+    Xs2aBalance:
+      required:
+      - balanceAmount
+      - balanceType
+      type: object
+      properties:
+        balanceType:
+          type: string
+          description: Balance type.
+          enum:
+          - closingBooked
+          - expected
+          - openingBooked
+          - interimAvailable
+          - forwardAvailable
+        balanceAmount:
+          $ref: '#/components/schemas/Xs2aAmount'
+        referenceDate:
+          type: string
+          description: Reference date of the balance.
+          format: date
+        creditLimitIncluded:
+          type: boolean
+          description: A flag indicating if the credit limit of the corresponding account is included in the calculation of the balance, where applicable
+      description: List of balances for the account.
+    Xs2aTransactionsResponse:
+      required:
+      - account
+      - transactions
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
+        transactions:
+          $ref: '#/components/schemas/Xs2aTransactions'
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
+    Xs2aAccountsResponse:
+      required:
+      - accounts
+      type: object
+      properties:
+        accounts:
+          type: array
+          description: List of account data.
+          items:
+            $ref: '#/components/schemas/Xs2aAccount'
+    Xs2aTransaction:
+      required:
+      - transactionAmount
+      type: object
+      properties:
+        transactionId:
+          type: string
+          description: Can be used as access-ID in the API, where more details on an transaction is offered. If this data attribute is provided this shows that the AIS can get access on more details about this transaction using the GET Transaction Details Request as defined in Section 6.6.5.
+        bookingDate:
+          type: string
+          description: The Date when an entry is posted to an account on the ASPSPs books.
+        valueDate:
+          type: string
+          description: The Date at which assets become available to the account owner in case of a credit.
+        transactionAmount:
+          $ref: '#/components/schemas/Xs2aAmount'
+        creditorName:
+          type: string
+          description: Name of the debtor if a "Credited" transaction.
+        creditorAccount:
+          $ref: '#/components/schemas/Xs2aAccount'
+        ultimateCreditor:
+          type: string
+        debtorName:
+          type: string
+          description: Name of the creditor if a "Debited" transaction.
+        debtorAccount:
+          $ref: '#/components/schemas/Xs2aAccount'
+        ultimateDebtor:
+          type: string
+        remittanceInformationUnstructured:
+          type: string
+        proprietaryBankTransactionCode:
+          type: string
+          description: Proprietary bank transaction code as used within a community or within an ASPSP.
+        endToEndIdentification:
+          type: string
+          description: endToEndIdentification of the transaction.
+        returnInformationCode:
+          type: string
+          description: ReasonCode in case of R-message
+        batchIndicator:
+          type: boolean
+        batchNumberOfTransactions:
+          type: integer
+          format: int32
+      description: List of pending transactions.
+    Xs2aBalancesResponse:
+      required:
+      - account
+      - balances
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
+        balances:
+          type: array
+          description: List of balances for the account.
+          items:
+            $ref: '#/components/schemas/Xs2aBalance'
+    Xs2aAccountLinks:
+      type: object
+      properties:
+        account:
+          type: string
+          description: A link to the resource providing the details of a dedicated account.
+        transactions:
+          type: string
+          description: A link to the resource providing the transaction history of a dedicated account.
+        balances:
+          type: string
+          description: A link to the resource providing the balance of a dedicated account.
+      description: Links to the account, which can be directly used for retrieving account information from this dedicated account. Links to "balances" and/or "transactions" These links are only supported, when the corresponding consent has been already granted.
+    TppMessage:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Additional explaining text.
+        code:
+          type: string
+          description: Message code.
+          enum:
+          - CERTIFICATE_INVALID
+          - CERTIFICATE_EXPIRED
+          - CERTIFICATE_BLOCKED
+          - CERTIFICATE_REVOKED
+          - CERTIFICATE_MISSING
+          - SIGNATURE_INVALID
+          - SIGNATURE_MISSING
+          - ROLE_INVALID
+          - FORMAT_ERROR
+          - PARAMETER_NOT_CONSISTENT
+          - PARAMETER_NOT_SUPPORTED
+          - PSU_CREDENTIALS_INVALID
+          - SERVICE_INVALID
+          - SERVICE_BLOCKED
+          - CORPORATE_ID_INVALID
+          - CONSENT_UNKNOWN
+          - CONSENT_INVALID
+          - CONSENT_EXPIRED
+          - TOKEN_UNKNOWN
+          - TOKEN_INVALID
+          - TOKEN_EXPIRED
+          - RESOURCE_UNKNOWN
+          - RESOURCE_EXPIRED
+          - RESOURCE_BLOCKED
+          - TIMESTAMP_INVALID
+          - PERIOD_INVALID
+          - SCA_METHOD_UNKNOWN
+          - SCA_INVALID
+          - STATUS_INVALID
+          - PRODUCT_INVALID
+          - PRODUCT_UNKNOWN
+          - PAYMENT_FAILED
+          - REQUIRED_KID_MISSING
+          - EXECUTION_DATE_INVALID
+          - CANCELLATION_INVALID
+          - BENEFICIARY_WHITELISTING_REQUIRED
+          - FUNDS_NOT_AVAILABLE
+          - CONTENT_INVALID
+          - SESSIONS_NOT_SUPPORTED
+          - ACCESS_EXCEEDED
+          - REQUESTED_FORMATS_INVALID
+          - CARD_INVALID
+          - NO_PIIS_ACTIVATION
+          - REFERENCE_MIX_INVALID
+          - REFERENCE_STATUS_INVALID
+        category:
+          type: string
+      description: List of messages.
+    Xs2aTransactionLinks:
+      required:
+      - account
+      type: object
+      properties:
+        account:
+          type: string
+          description: A link to the resource providing the details of one account.
+        first:
+          type: string
+          description: Navigation link for paginated account reports.
+        next:
+          type: string
+          description: Navigation link for paginated account reports.
+      description: Transaction links.
+    Xs2aAmount:
+      required:
+      - amount
+      - currency
+      type: object
+      properties:
+        currency:
+          type: string
+          description: ISO 4217 Alpha 3 currency code
+        amount:
+          type: number
+          description: The amount given with fractional digits, where fractions must be compliant to the currency definition. Up to 14 significant figures. Negative amounts are signed by minus. The decimal separator is a dot.
+          format: double
+      description: The amount of the transaction as billed to the account.
+    Xs2aTransactions:
+      required:
+      - booked
+      type: object
+      properties:
+        booked:
+          type: array
+          description: List of booked transactions.
+          items:
+            $ref: '#/components/schemas/Xs2aTransaction'
+        pending:
+          type: array
+          description: List of pending transactions.
+          items:
+            $ref: '#/components/schemas/Xs2aTransaction'
+        _links:
+          $ref: '#/components/schemas/Xs2aTransactionLinks'
+      description: List of transaction data.
+    Xs2aAccountResponse:
+      required:
+      - account
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
+externalDocs:
+  description: Berlin Group XS2A Implementation Version 1.3
+  url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf

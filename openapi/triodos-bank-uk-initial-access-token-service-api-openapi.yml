@@ -1,0 +1,146 @@
+openapi: 3.2.0
+info:
+  title: Triodos XS2A BG service Initial Access Token Service API
+  description: Triodos XS2A BG service
+  termsOfService: https://www.triodos.com
+  contact:
+    name: Triodos Support
+    url: https://www.triodos.com
+    email: info@triodos.com
+  license:
+    name: Creative Commons Attribution 4.0 International Public License
+    url: https://creativecommons.org/licenses/by/4.0/
+  version: '1.1'
+servers:
+- url: https://xs2a-sandbox.triodos.com/xs2a-bg
+  description: Triodos XS2A Sandbox
+tags:
+- name: Initial Access Token Service
+paths:
+  /{tenant}/onboarding/v1:
+    get:
+      tags:
+      - Initial Access Token Service
+      summary: Get initial access token
+      description: Validates the TPP's X.509 EIDAS certificate and returns an initial access token to continue onboarding procedure.
+      operationId: initialAccessToken
+      parameters:
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      responses:
+        '200':
+          description: Initial access token returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Xs2aInitialAccessTokenResponse'
+        '401':
+          description: TLS certificate is missing or invalid/ Provided certificate contains an invalid organizationIdentifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TppMessages'
+components:
+  schemas:
+    Xs2aInitialAccessTokenResponse:
+      type: object
+      properties:
+        scope:
+          type: string
+          description: OAuth2 scope.
+        access_token:
+          type: string
+          description: OAuth2 access token.
+        expires_in:
+          type: integer
+          description: Token expiry in seconds.
+          format: int64
+        token_type:
+          type: string
+          description: OAuth2 token type.
+        _links:
+          $ref: '#/components/schemas/Xs2aInitialAccessTokenLinks'
+    Xs2aInitialAccessTokenLinks:
+      type: object
+      properties:
+        registration:
+          type: string
+          description: Link to the TPP registration service.
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
+    TppMessage:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Additional explaining text.
+        code:
+          type: string
+          description: Message code.
+          enum:
+          - CERTIFICATE_INVALID
+          - CERTIFICATE_EXPIRED
+          - CERTIFICATE_BLOCKED
+          - CERTIFICATE_REVOKED
+          - CERTIFICATE_MISSING
+          - SIGNATURE_INVALID
+          - SIGNATURE_MISSING
+          - ROLE_INVALID
+          - FORMAT_ERROR
+          - PARAMETER_NOT_CONSISTENT
+          - PARAMETER_NOT_SUPPORTED
+          - PSU_CREDENTIALS_INVALID
+          - SERVICE_INVALID
+          - SERVICE_BLOCKED
+          - CORPORATE_ID_INVALID
+          - CONSENT_UNKNOWN
+          - CONSENT_INVALID
+          - CONSENT_EXPIRED
+          - TOKEN_UNKNOWN
+          - TOKEN_INVALID
+          - TOKEN_EXPIRED
+          - RESOURCE_UNKNOWN
+          - RESOURCE_EXPIRED
+          - RESOURCE_BLOCKED
+          - TIMESTAMP_INVALID
+          - PERIOD_INVALID
+          - SCA_METHOD_UNKNOWN
+          - SCA_INVALID
+          - STATUS_INVALID
+          - PRODUCT_INVALID
+          - PRODUCT_UNKNOWN
+          - PAYMENT_FAILED
+          - REQUIRED_KID_MISSING
+          - EXECUTION_DATE_INVALID
+          - CANCELLATION_INVALID
+          - BENEFICIARY_WHITELISTING_REQUIRED
+          - FUNDS_NOT_AVAILABLE
+          - CONTENT_INVALID
+          - SESSIONS_NOT_SUPPORTED
+          - ACCESS_EXCEEDED
+          - REQUESTED_FORMATS_INVALID
+          - CARD_INVALID
+          - NO_PIIS_ACTIVATION
+          - REFERENCE_MIX_INVALID
+          - REFERENCE_STATUS_INVALID
+        category:
+          type: string
+      description: List of messages.
+externalDocs:
+  description: Berlin Group XS2A Implementation Version 1.3
+  url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf

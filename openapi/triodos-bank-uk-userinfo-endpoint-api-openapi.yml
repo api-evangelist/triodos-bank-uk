@@ -1,0 +1,437 @@
+openapi: 3.2.0
+info:
+  title: Triodos Auth service UserInfo Endpoint API
+  description: Triodos Auth service
+  termsOfService: https://www.triodos.com
+  contact:
+    name: Triodos Support
+    url: https://www.triodos.com
+    email: info@triodos.com
+  license:
+    name: Creative Commons Attribution 4.0 International Public License
+    url: https://creativecommons.org/licenses/by/4.0/
+  version: '1.0'
+servers:
+- url: https://xs2a-sandbox.triodos.com/auth
+  description: Triodos Auth Sandbox
+tags:
+- name: UserInfo Endpoint
+  description: The UserInfo Endpoint provides information about the authenticated end-user.
+  externalDocs:
+    description: OpenID Connect Core 1.0 - Chapter 5.3 UserInfo Endpoint
+    url: https://openid.net/specs/openid-connect-core-1_0.html
+paths:
+  /{tenant}/v1/userinfo:
+    get:
+      tags:
+      - UserInfo Endpoint
+      summary: Get UserInfo
+      description: The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the authenticated End-User. To obtain the requested Claims about the End-User, the Client makes a request to the UserInfo Endpoint using an Access Token obtained through OpenID Connect Authentication. These Claims are normally represented by a JSON object that contains a collection of name and value pairs for the Claims.
+      operationId: doGet
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer access token.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      responses:
+        '200':
+          description: The UserInfo Claims MUST be returned as the members of a JSON object unless a signed or encrypted response was requested during Client Registration. The Claims defined in OpenID Connect Core 1.0 - Section 5.1 can be returned, as can additional Claims not specified there.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedJWT'
+        '400':
+          description: invalid_token or access_denied
+    post:
+      tags:
+      - UserInfo Endpoint
+      summary: Get UserInfo
+      description: The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the authenticated End-User. To obtain the requested Claims about the End-User, the Client makes a request to the UserInfo Endpoint using an Access Token obtained through OpenID Connect Authentication. These Claims are normally represented by a JSON object that contains a collection of name and value pairs for the Claims.
+      operationId: doPost
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer access token.
+        required: true
+        schema:
+          type: string
+      - name: tenant
+        in: path
+        description: Branch of the request.
+        required: true
+        schema:
+          type: string
+          enum:
+          - uk
+          - nl
+          - be_fr
+          - be_nl
+      responses:
+        '200':
+          description: The UserInfo Claims MUST be returned as the members of a JSON object unless a signed or encrypted response was requested during Client Registration. The Claims defined in OpenID Connect Core 1.0 - Section 5.1 can be returned, as can additional Claims not specified there.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedJWT'
+        '400':
+          description: invalid_token or access_denied
+components:
+  schemas:
+    Algorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    JWTClaimsSet:
+      type: object
+      properties:
+        claims:
+          type: object
+          additionalProperties:
+            type: object
+        expirationTime:
+          type: string
+          format: date-time
+        issuer:
+          type: string
+        subject:
+          type: string
+        audience:
+          type: array
+          items:
+            type: string
+        notBeforeTime:
+          type: string
+          format: date-time
+        issueTime:
+          type: string
+          format: date-time
+        jwtid:
+          type: string
+    Payload:
+      type: object
+      properties:
+        origin:
+          type: string
+          enum:
+          - JSON
+          - STRING
+          - BYTE_ARRAY
+          - BASE64URL
+          - JWS_OBJECT
+          - SIGNED_JWT
+    Base64:
+      type: object
+    JWSHeader:
+      type: object
+      properties:
+        customParams:
+          type: object
+          additionalProperties:
+            type: object
+        parsedBase64URL:
+          $ref: '#/components/schemas/Base64URL'
+        jwk:
+          $ref: '#/components/schemas/JWK'
+        algorithm:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        base64URLEncodePayload:
+          type: boolean
+        includedParams:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        keyID:
+          type: string
+        jwkurl:
+          type: string
+          format: uri
+        x509CertURL:
+          type: string
+          format: uri
+        x509CertThumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertSHA256Thumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertChain:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64'
+        type:
+          $ref: '#/components/schemas/JOSEObjectType'
+        contentType:
+          type: string
+        criticalParams:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    JWK:
+      type: object
+      properties:
+        keyStore:
+          type: object
+          properties:
+            type:
+              type: string
+            provider:
+              type: object
+              additionalProperties:
+                type: string
+        expirationTime:
+          type: string
+          format: date-time
+        private:
+          type: boolean
+        algorithm:
+          $ref: '#/components/schemas/Algorithm'
+        keyType:
+          $ref: '#/components/schemas/KeyType'
+        keyID:
+          type: string
+        x509CertURL:
+          type: string
+          format: uri
+        x509CertThumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertSHA256Thumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertChain:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64'
+        notBeforeTime:
+          type: string
+          format: date-time
+        issueTime:
+          type: string
+          format: date-time
+        keyUse:
+          $ref: '#/components/schemas/KeyUse'
+        keyOperations:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+            - sign
+            - verify
+            - encrypt
+            - decrypt
+            - wrapKey
+            - unwrapKey
+            - deriveKey
+            - deriveBits
+        parsedX509CertChain:
+          type: array
+          items:
+            type: object
+            properties:
+              subjectDN:
+                type: object
+                properties:
+                  name:
+                    type: string
+              issuerDN:
+                type: object
+                properties:
+                  name:
+                    type: string
+              tbscertificate:
+                type: string
+                format: byte
+              sigAlgName:
+                type: string
+              sigAlgOID:
+                type: string
+              issuerUniqueID:
+                type: array
+                items:
+                  type: boolean
+              subjectUniqueID:
+                type: array
+                items:
+                  type: boolean
+              subjectAlternativeNames:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: object
+              issuerAlternativeNames:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: object
+              sigAlgParams:
+                type: string
+                format: byte
+              notBefore:
+                type: string
+                format: date-time
+              notAfter:
+                type: string
+                format: date-time
+              extendedKeyUsage:
+                type: array
+                items:
+                  type: string
+              keyUsage:
+                type: array
+                items:
+                  type: boolean
+              signature:
+                type: string
+                format: byte
+              basicConstraints:
+                type: integer
+                format: int32
+              issuerX500Principal:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  encoded:
+                    type: string
+                    format: byte
+              subjectX500Principal:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  encoded:
+                    type: string
+                    format: byte
+              version:
+                type: integer
+                format: int32
+              serialNumber:
+                type: integer
+              nonCriticalExtensionOIDs:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+              criticalExtensionOIDs:
+                uniqueItems: true
+                type: array
+                items:
+                  type: string
+              type:
+                type: string
+              encoded:
+                type: string
+                format: byte
+              publicKey:
+                type: object
+                properties:
+                  encoded:
+                    type: string
+                    format: byte
+                  format:
+                    type: string
+                  algorithm:
+                    type: string
+        keyRevocation:
+          $ref: '#/components/schemas/KeyRevocation'
+        requiredParams:
+          type: object
+          additionalProperties:
+            type: object
+    KeyRevocation:
+      type: object
+      properties:
+        reason:
+          $ref: '#/components/schemas/Reason'
+        revocationTime:
+          type: string
+          format: date-time
+    KeyType:
+      type: object
+      properties:
+        value:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    JWSAlgorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    JOSEObjectType:
+      type: object
+      properties:
+        type:
+          type: string
+    Base64URL:
+      type: object
+    KeyUse:
+      type: object
+      properties:
+        value:
+          type: string
+    Reason:
+      type: object
+      properties:
+        value:
+          type: string
+    SignedJWT:
+      type: object
+      properties:
+        payload:
+          $ref: '#/components/schemas/Payload'
+        parsedParts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64URL'
+        header:
+          $ref: '#/components/schemas/JWSHeader'
+        signature:
+          $ref: '#/components/schemas/Base64URL'
+        state:
+          type: string
+          enum:
+          - UNSIGNED
+          - SIGNED
+          - VERIFIED
+        jwtclaimsSet:
+          $ref: '#/components/schemas/JWTClaimsSet'
+        parsedString:
+          type: string
+        signingInput:
+          type: string
+          format: byte
+externalDocs:
+  description: OpenID Connect 1.0 specifications
+  url: https://openid.net/connect/
