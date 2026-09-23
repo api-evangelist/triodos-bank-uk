@@ -137,42 +137,51 @@ paths:
           description: access_denied
 components:
   schemas:
-    Secret:
+    AuthorizationType:
       type: object
       properties:
         value:
           type: string
-        expirationDate:
-          type: string
-          format: date-time
-        sha256:
-          type: string
-          format: byte
-        valueBytes:
-          type: string
-          format: byte
-    SoftwareID:
-      type: object
-      properties:
-        value:
-          type: string
-    TokenTypeURI:
-      type: object
-      properties:
         uri:
           type: string
           format: uri
-    HashAlgorithm:
+    BearerAccessToken:
       type: object
       properties:
         value:
           type: string
-    ClientRegistrationType:
-      type: object
-      properties:
-        value:
-          type: string
-    JWEAlgorithm:
+        type:
+          $ref: '#/components/schemas/AccessTokenType'
+        lifetime:
+          type: integer
+          format: int64
+        scope:
+          type: array
+          properties:
+            first:
+              $ref: '#/components/schemas/Value'
+            last:
+              $ref: '#/components/schemas/Value'
+            empty:
+              type: boolean
+          items:
+            $ref: '#/components/schemas/Value'
+        authorizationDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationDetail'
+        issuedTokenType:
+          $ref: '#/components/schemas/TokenTypeURI'
+        parameterNames:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        customParameters:
+          type: object
+          additionalProperties:
+            type: object
+    Algorithm:
       type: object
       properties:
         name:
@@ -183,60 +192,24 @@ components:
           - REQUIRED
           - RECOMMENDED
           - OPTIONAL
-    KeyType:
+    GrantType:
       type: object
       properties:
         value:
           type: string
-        requirement:
+        shortName:
+          type: string
+        scopeRequirementInTokenRequest:
           type: string
           enum:
           - REQUIRED
-          - RECOMMENDED
           - OPTIONAL
-    AuthorizationDetail:
-      type: object
-      properties:
-        identifier:
-          $ref: '#/components/schemas/Identifier'
-        actions:
+          - NOT_ALLOWED
+        requestParameterNames:
+          uniqueItems: true
           type: array
           items:
-            $ref: '#/components/schemas/Action'
-        type:
-          $ref: '#/components/schemas/AuthorizationType'
-        locations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Location'
-        dataTypes:
-          type: array
-          items:
-            $ref: '#/components/schemas/DataType'
-        privileges:
-          type: array
-          items:
-            $ref: '#/components/schemas/Privilege'
-    ClientID:
-      type: object
-      properties:
-        value:
-          type: string
-    Identifier:
-      type: object
-      properties:
-        value:
-          type: string
-    ClientAuthenticationMethod:
-      type: object
-      properties:
-        value:
-          type: string
-    Action:
-      type: object
-      properties:
-        value:
-          type: string
+            type: string
     JWTClaimsSet:
       type: object
       properties:
@@ -263,108 +236,8 @@ components:
           format: date-time
         jwtid:
           type: string
-    Location:
-      type: object
-      properties:
-        value:
-          type: string
-        uri:
-          type: string
-          format: uri
-    Value:
-      type: object
-      properties:
-        value:
-          type: string
-    JWSHeader:
-      type: object
-      properties:
-        customParams:
-          type: object
-          additionalProperties:
-            type: object
-        parsedBase64URL:
-          $ref: '#/components/schemas/Base64URL'
-        jwk:
-          $ref: '#/components/schemas/JWK'
-        algorithm:
-          $ref: '#/components/schemas/JWSAlgorithm'
-        base64URLEncodePayload:
-          type: boolean
-        includedParams:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        keyID:
-          type: string
-        jwkurl:
-          type: string
-          format: uri
-        x509CertURL:
-          type: string
-          format: uri
-        x509CertThumbprint:
-          $ref: '#/components/schemas/Base64URL'
-        x509CertSHA256Thumbprint:
-          $ref: '#/components/schemas/Base64URL'
-        x509CertChain:
-          type: array
-          items:
-            $ref: '#/components/schemas/Base64'
-        type:
-          $ref: '#/components/schemas/JOSEObjectType'
-        contentType:
-          type: string
-        criticalParams:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-    GrantType:
-      type: object
-      properties:
-        value:
-          type: string
-        shortName:
-          type: string
-        scopeRequirementInTokenRequest:
-          type: string
-          enum:
-          - REQUIRED
-          - OPTIONAL
-          - NOT_ALLOWED
-        requestParameterNames:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-    JOSEObjectType:
-      type: object
-      properties:
-        type:
-          type: string
     Base64URL:
       type: object
-    OIDCClientInformation:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/ClientID'
-        metadata:
-          $ref: '#/components/schemas/ClientMetadata'
-        secret:
-          $ref: '#/components/schemas/Secret'
-        registrationURI:
-          type: string
-          format: uri
-        oidcmetadata:
-          $ref: '#/components/schemas/OIDCClientMetadata'
-        registrationAccessToken:
-          $ref: '#/components/schemas/BearerAccessToken'
-        idissueDate:
-          type: string
-          format: date-time
     ClientMetadata:
       type: object
       properties:
@@ -529,27 +402,81 @@ components:
             type: string
         mutualTLSSenderConstrainedAccessTokens:
           type: boolean
-    KeyRevocation:
+    JOSEObjectType:
       type: object
       properties:
-        reason:
-          $ref: '#/components/schemas/Reason'
-        revocationTime:
+        type:
           type: string
-          format: date-time
-    Base64:
-      type: object
-    Privilege:
+    TokenTypeURI:
       type: object
       properties:
-        value:
+        uri:
           type: string
-    DataType:
+          format: uri
+    Identifier:
       type: object
       properties:
         value:
           type: string
-    JWSAlgorithm:
+    JWSHeader:
+      type: object
+      properties:
+        customParams:
+          type: object
+          additionalProperties:
+            type: object
+        parsedBase64URL:
+          $ref: '#/components/schemas/Base64URL'
+        jwk:
+          $ref: '#/components/schemas/JWK'
+        algorithm:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        base64URLEncodePayload:
+          type: boolean
+        includedParams:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        keyID:
+          type: string
+        jwkurl:
+          type: string
+          format: uri
+        x509CertURL:
+          type: string
+          format: uri
+        x509CertThumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertSHA256Thumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertChain:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64'
+        type:
+          $ref: '#/components/schemas/JOSEObjectType'
+        contentType:
+          type: string
+        criticalParams:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    ClientRegistrationType:
+      type: object
+      properties:
+        value:
+          type: string
+    Location:
+      type: object
+      properties:
+        value:
+          type: string
+        uri:
+          type: string
+          format: uri
+    EncryptionMethod:
       type: object
       properties:
         name:
@@ -560,7 +487,60 @@ components:
           - REQUIRED
           - RECOMMENDED
           - OPTIONAL
-    KeyUse:
+    SoftwareID:
+      type: object
+      properties:
+        value:
+          type: string
+    HashAlgorithm:
+      type: object
+      properties:
+        value:
+          type: string
+    ClientAuthenticationMethod:
+      type: object
+      properties:
+        value:
+          type: string
+    ACR:
+      type: object
+      properties:
+        value:
+          type: string
+    AuthorizationDetail:
+      type: object
+      properties:
+        identifier:
+          $ref: '#/components/schemas/Identifier'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+        type:
+          $ref: '#/components/schemas/AuthorizationType'
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        dataTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataType'
+        privileges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Privilege'
+    Privilege:
+      type: object
+      properties:
+        value:
+          type: string
+    SoftwareVersion:
+      type: object
+      properties:
+        value:
+          type: string
+    DataType:
       type: object
       properties:
         value:
@@ -779,6 +759,56 @@ components:
             type: string
         mutualTLSSenderConstrainedAccessTokens:
           type: boolean
+    AccessTokenType:
+      type: object
+      properties:
+        value:
+          type: string
+    BackChannelTokenDeliveryMode:
+      type: object
+      properties:
+        value:
+          type: string
+    Value:
+      type: object
+      properties:
+        value:
+          type: string
+    KeyRevocation:
+      type: object
+      properties:
+        reason:
+          $ref: '#/components/schemas/Reason'
+        revocationTime:
+          type: string
+          format: date-time
+    Secret:
+      type: object
+      properties:
+        value:
+          type: string
+        expirationDate:
+          type: string
+          format: date-time
+        sha256:
+          type: string
+          format: byte
+        valueBytes:
+          type: string
+          format: byte
+    KeyType:
+      type: object
+      properties:
+        value:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    Base64:
+      type: object
     SignedJWT:
       type: object
       properties:
@@ -805,113 +835,7 @@ components:
         signingInput:
           type: string
           format: byte
-    JWKSet:
-      type: object
-      properties:
-        keys:
-          type: array
-          items:
-            $ref: '#/components/schemas/JWK'
-        empty:
-          type: boolean
-        additionalMembers:
-          type: object
-          additionalProperties:
-            type: object
-    Algorithm:
-      type: object
-      properties:
-        name:
-          type: string
-        requirement:
-          type: string
-          enum:
-          - REQUIRED
-          - RECOMMENDED
-          - OPTIONAL
-    EncryptionMethod:
-      type: object
-      properties:
-        name:
-          type: string
-        requirement:
-          type: string
-          enum:
-          - REQUIRED
-          - RECOMMENDED
-          - OPTIONAL
-    Payload:
-      type: object
-      properties:
-        origin:
-          type: string
-          enum:
-          - JSON
-          - STRING
-          - BYTE_ARRAY
-          - BASE64URL
-          - JWS_OBJECT
-          - SIGNED_JWT
-    SoftwareVersion:
-      type: object
-      properties:
-        value:
-          type: string
-    AccessTokenType:
-      type: object
-      properties:
-        value:
-          type: string
-    BearerAccessToken:
-      type: object
-      properties:
-        value:
-          type: string
-        type:
-          $ref: '#/components/schemas/AccessTokenType'
-        lifetime:
-          type: integer
-          format: int64
-        scope:
-          type: array
-          properties:
-            first:
-              $ref: '#/components/schemas/Value'
-            last:
-              $ref: '#/components/schemas/Value'
-            empty:
-              type: boolean
-          items:
-            $ref: '#/components/schemas/Value'
-        authorizationDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuthorizationDetail'
-        issuedTokenType:
-          $ref: '#/components/schemas/TokenTypeURI'
-        parameterNames:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        customParameters:
-          type: object
-          additionalProperties:
-            type: object
-    Reason:
-      type: object
-      properties:
-        value:
-          type: string
-    AuthorizationType:
-      type: object
-      properties:
-        value:
-          type: string
-        uri:
-          type: string
-          format: uri
-    ACR:
+    ClientID:
       type: object
       properties:
         value:
@@ -1089,11 +1013,87 @@ components:
           type: object
           additionalProperties:
             type: object
-    BackChannelTokenDeliveryMode:
+    KeyUse:
       type: object
       properties:
         value:
           type: string
+    Reason:
+      type: object
+      properties:
+        value:
+          type: string
+    OIDCClientInformation:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ClientID'
+        metadata:
+          $ref: '#/components/schemas/ClientMetadata'
+        secret:
+          $ref: '#/components/schemas/Secret'
+        registrationURI:
+          type: string
+          format: uri
+        oidcmetadata:
+          $ref: '#/components/schemas/OIDCClientMetadata'
+        registrationAccessToken:
+          $ref: '#/components/schemas/BearerAccessToken'
+        idissueDate:
+          type: string
+          format: date-time
+    Action:
+      type: object
+      properties:
+        value:
+          type: string
+    JWSAlgorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    JWEAlgorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    JWKSet:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/JWK'
+        empty:
+          type: boolean
+        additionalMembers:
+          type: object
+          additionalProperties:
+            type: object
+    Payload:
+      type: object
+      properties:
+        origin:
+          type: string
+          enum:
+          - JSON
+          - STRING
+          - BYTE_ARRAY
+          - BASE64URL
+          - JWS_OBJECT
+          - SIGNED_JWT
 externalDocs:
   description: OpenID Connect 1.0 specifications
   url: https://openid.net/connect/

@@ -69,12 +69,6 @@ components:
           description: OAuth2 token type.
         _links:
           $ref: '#/components/schemas/Xs2aInitialAccessTokenLinks'
-    Xs2aInitialAccessTokenLinks:
-      type: object
-      properties:
-        registration:
-          type: string
-          description: Link to the TPP registration service.
     TppMessages:
       type: object
       properties:
@@ -83,6 +77,12 @@ components:
           description: List of messages.
           items:
             $ref: '#/components/schemas/TppMessage'
+    Xs2aInitialAccessTokenLinks:
+      type: object
+      properties:
+        registration:
+          type: string
+          description: Link to the TPP registration service.
     TppMessage:
       type: object
       properties:

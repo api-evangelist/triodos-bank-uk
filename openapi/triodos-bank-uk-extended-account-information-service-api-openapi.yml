@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Triodos XS2A BG service Extended Account Information Service API
+  title: Triodos XS2A BG service Extended Account Information…
   description: Triodos XS2A BG service
   termsOfService: https://www.triodos.com
   contact:
@@ -22,7 +22,11 @@ paths:
       tags:
       - Extended Account Information Service
       summary: Read Savings Account Details
-      description: "      Reads details about a savings account, with balances where required.\n      It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system.\n      The addressed details of this account depends then on the stored consent addressed by consentId, respectively the OAuth2 access token.\n"
+      description: 'Reads details about a savings account, with balances where required.
+
+        It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system.
+
+        The addressed details of this account depends then on the stored consent addressed by consentId, respectively the OAuth2 access token.'
       operationId: getAccount_1
       parameters:
       - name: X-Request-ID
@@ -419,6 +423,43 @@ paths:
                 $ref: '#/components/schemas/TppMessages'
 components:
   schemas:
+    Xs2aAmount:
+      required:
+      - amount
+      - currency
+      type: object
+      properties:
+        currency:
+          type: string
+          description: ISO 4217 Alpha 3 currency code
+        amount:
+          type: number
+          description: The amount given with fractional digits, where fractions must be compliant to the currency definition. Up to 14 significant figures. Negative amounts are signed by minus. The decimal separator is a dot.
+          format: double
+      description: The amount of the transaction as billed to the account.
+    Xs2aTransactionLinks:
+      required:
+      - account
+      type: object
+      properties:
+        account:
+          type: string
+          description: A link to the resource providing the details of one account.
+        first:
+          type: string
+          description: Navigation link for paginated account reports.
+        next:
+          type: string
+          description: Navigation link for paginated account reports.
+      description: Transaction links.
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
     Xs2aAccount:
       type: object
       properties:
@@ -475,58 +516,6 @@ components:
           - blocked
         _links:
           $ref: '#/components/schemas/Xs2aAccountLinks'
-    Xs2aTransactionSearchCriteriaEdgeToken:
-      type: object
-      properties:
-        edgeTokenTransactionTimestamp:
-          type: string
-          format: date-time
-        edgeTokenTransactionID:
-          $ref: '#/components/schemas/ID'
-        bookingStatus:
-          type: string
-          enum:
-          - booked
-          - pending
-          - both
-          - information
-          - all
-        dateFrom:
-          type: string
-          format: date
-        dateTo:
-          type: string
-          format: date
-    ID:
-      type: object
-      properties:
-        temporaryKey:
-          type: boolean
-    Xs2aBalance:
-      required:
-      - balanceAmount
-      - balanceType
-      type: object
-      properties:
-        balanceType:
-          type: string
-          description: Balance type.
-          enum:
-          - closingBooked
-          - expected
-          - openingBooked
-          - interimAvailable
-          - forwardAvailable
-        balanceAmount:
-          $ref: '#/components/schemas/Xs2aAmount'
-        referenceDate:
-          type: string
-          description: Reference date of the balance.
-          format: date
-        creditLimitIncluded:
-          type: boolean
-          description: A flag indicating if the credit limit of the corresponding account is included in the calculation of the balance, where applicable
-      description: List of balances for the account.
     Xs2aTransactionsResponse:
       required:
       - account
@@ -537,24 +526,13 @@ components:
           $ref: '#/components/schemas/Xs2aAccount'
         transactions:
           $ref: '#/components/schemas/Xs2aTransactions'
-    TppMessages:
-      type: object
-      properties:
-        tppMessages:
-          type: array
-          description: List of messages.
-          items:
-            $ref: '#/components/schemas/TppMessage'
-    Xs2aAccountsResponse:
+    Xs2aAccountResponse:
       required:
-      - accounts
+      - account
       type: object
       properties:
-        accounts:
-          type: array
-          description: List of account data.
-          items:
-            $ref: '#/components/schemas/Xs2aAccount'
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
     Xs2aTransaction:
       required:
       - transactionAmount
@@ -602,6 +580,29 @@ components:
           type: integer
           format: int32
       description: List of pending transactions.
+    Xs2aTransactions:
+      required:
+      - booked
+      type: object
+      properties:
+        booked:
+          type: array
+          description: List of booked transactions.
+          items:
+            $ref: '#/components/schemas/Xs2aTransaction'
+        pending:
+          type: array
+          description: List of pending transactions.
+          items:
+            $ref: '#/components/schemas/Xs2aTransaction'
+        _links:
+          $ref: '#/components/schemas/Xs2aTransactionLinks'
+      description: List of transaction data.
+    ID:
+      type: object
+      properties:
+        temporaryKey:
+          type: boolean
     Xs2aBalancesResponse:
       required:
       - account
@@ -615,6 +616,63 @@ components:
           description: List of balances for the account.
           items:
             $ref: '#/components/schemas/Xs2aBalance'
+    Xs2aTransactionSearchCriteriaEdgeToken:
+      type: object
+      properties:
+        edgeTokenTransactionTimestamp:
+          type: string
+          format: date-time
+        edgeTokenTransactionID:
+          $ref: '#/components/schemas/ID'
+        bookingStatus:
+          type: string
+          enum:
+          - booked
+          - pending
+          - both
+          - information
+          - all
+        dateFrom:
+          type: string
+          format: date
+        dateTo:
+          type: string
+          format: date
+    Xs2aBalance:
+      required:
+      - balanceAmount
+      - balanceType
+      type: object
+      properties:
+        balanceType:
+          type: string
+          description: Balance type.
+          enum:
+          - closingBooked
+          - expected
+          - openingBooked
+          - interimAvailable
+          - forwardAvailable
+        balanceAmount:
+          $ref: '#/components/schemas/Xs2aAmount'
+        referenceDate:
+          type: string
+          description: Reference date of the balance.
+          format: date
+        creditLimitIncluded:
+          type: boolean
+          description: A flag indicating if the credit limit of the corresponding account is included in the calculation of the balance, where applicable
+      description: List of balances for the account.
+    Xs2aAccountsResponse:
+      required:
+      - accounts
+      type: object
+      properties:
+        accounts:
+          type: array
+          description: List of account data.
+          items:
+            $ref: '#/components/schemas/Xs2aAccount'
     Xs2aAccountLinks:
       type: object
       properties:
@@ -686,60 +744,6 @@ components:
         category:
           type: string
       description: List of messages.
-    Xs2aTransactionLinks:
-      required:
-      - account
-      type: object
-      properties:
-        account:
-          type: string
-          description: A link to the resource providing the details of one account.
-        first:
-          type: string
-          description: Navigation link for paginated account reports.
-        next:
-          type: string
-          description: Navigation link for paginated account reports.
-      description: Transaction links.
-    Xs2aAmount:
-      required:
-      - amount
-      - currency
-      type: object
-      properties:
-        currency:
-          type: string
-          description: ISO 4217 Alpha 3 currency code
-        amount:
-          type: number
-          description: The amount given with fractional digits, where fractions must be compliant to the currency definition. Up to 14 significant figures. Negative amounts are signed by minus. The decimal separator is a dot.
-          format: double
-      description: The amount of the transaction as billed to the account.
-    Xs2aTransactions:
-      required:
-      - booked
-      type: object
-      properties:
-        booked:
-          type: array
-          description: List of booked transactions.
-          items:
-            $ref: '#/components/schemas/Xs2aTransaction'
-        pending:
-          type: array
-          description: List of pending transactions.
-          items:
-            $ref: '#/components/schemas/Xs2aTransaction'
-        _links:
-          $ref: '#/components/schemas/Xs2aTransactionLinks'
-      description: List of transaction data.
-    Xs2aAccountResponse:
-      required:
-      - account
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Xs2aAccount'
 externalDocs:
   description: Berlin Group XS2A Implementation Version 1.3
   url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf

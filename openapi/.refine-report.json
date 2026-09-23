@@ -1,0 +1,41 @@
+{
+  "provider": "triodos-bank-uk",
+  "sources": [
+    "_original/triodos-bank-uk-auth-openapi.json",
+    "_original/triodos-bank-uk-xs2a-openapi.json"
+  ],
+  "outputs": [
+    "triodos-bank-uk-authorization-endpoint-api-openapi.yml",
+    "triodos-bank-uk-client-registration-endpoint-api-openapi.yml",
+    "triodos-bank-uk-configuration-endpoint-api-openapi.yml",
+    "triodos-bank-uk-token-endpoint-api-openapi.yml",
+    "triodos-bank-uk-userinfo-endpoint-api-openapi.yml",
+    "triodos-bank-uk-account-information-service-api-openapi.yml",
+    "triodos-bank-uk-confirmation-of-funds-service-api-openapi.yml",
+    "triodos-bank-uk-extended-account-information-service-api-openapi.yml",
+    "triodos-bank-uk-initial-access-token-service-api-openapi.yml",
+    "triodos-bank-uk-payment-initiation-service-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "triodos-bank-uk-auth-openapi.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "triodos-bank-uk-xs2a-openapi.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "triodos-bank-uk-xs2a-openapi.json: declared missing tag: Extended Account Information Service",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "triodos-bank-uk-account-information-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-authorization-endpoint-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-client-registration-endpoint-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-configuration-endpoint-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-confirmation-of-funds-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-extended-account-information-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-initial-access-token-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-payment-initiation-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-token-endpoint-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "triodos-bank-uk-userinfo-endpoint-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
