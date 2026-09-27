@@ -48,7 +48,7 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
-- Financial-Services
+- Financial Services
 - Banking
 - Open Banking
 - PSD2
@@ -75,6 +75,7 @@ tags_raw:
 - Ethical Banking
 - Sustainable Finance
 - Specialist Lender
+- Financial-Services
 created: '2026-07-23'
 modified: '2026-07-23'
 specificationVersion: '0.23'
