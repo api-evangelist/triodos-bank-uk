@@ -1057,37 +1057,134 @@ paths:
                 $ref: '#/components/schemas/TppMessages'
 components:
   schemas:
-    Xs2aAccountsResponse:
+    Xs2aTransactions:
       required:
-      - accounts
+      - booked
       type: object
       properties:
-        accounts:
+        booked:
           type: array
-          description: List of account data.
+          description: List of booked transactions.
           items:
-            $ref: '#/components/schemas/Xs2aAccount'
-    Xs2aAuthorisationsRequestResponse:
-      required:
-      - authorisationIds
+            $ref: '#/components/schemas/Xs2aTransaction'
+        pending:
+          type: array
+          description: List of pending transactions.
+          items:
+            $ref: '#/components/schemas/Xs2aTransaction'
+        _links:
+          $ref: '#/components/schemas/Xs2aTransactionLinks'
+      description: List of transaction data.
+    Xs2aAccountLinks:
       type: object
       properties:
-        authorisationIds:
-          type: array
-          description: List of authorisation request ids.
-          items:
-            type: string
-            description: List of authorisation request ids.
-            format: uuid
-    Xs2aConsentRequest:
+        account:
+          type: string
+          description: A link to the resource providing the details of a dedicated account.
+        transactions:
+          type: string
+          description: A link to the resource providing the transaction history of a dedicated account.
+        balances:
+          type: string
+          description: A link to the resource providing the balance of a dedicated account.
+      description: Links to the account, which can be directly used for retrieving account information from this dedicated account. Links to "balances" and/or "transactions" These links are only supported, when the corresponding consent has been already granted.
+    Xs2aConsentStatusResponse:
+      required:
+      - consentStatus
+      type: object
+      properties:
+        consentStatus:
+          type: string
+          description: This is the overall lifecycle status of the consent.
+          enum:
+          - received
+          - valid
+          - rejected
+          - expired
+          - terminatedByTpp
+          - revokedByPsu
+    Xs2aAccount:
+      type: object
+      properties:
+        iban:
+          type: string
+          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
+        foreignAccountNumber:
+          type: string
+          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
+        ukSortCode:
+          type: string
+          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
+        ukAccountNumber:
+          type: string
+        currency:
+          type: string
+          description: Account currency
+        resourceId:
+          type: string
+          description: This is the data element to be used in the path when retrieving data from a dedicated account, cp. Section 6.6.3 or Section 6.6.4 below. This shall be filled, if addressable resource are created by the ASPSP on the /accounts or /card-accounts endpoint.
+        cashAccountType:
+          type: string
+          description: ExternalCashAccountType1Code from ISO 20022
+          enum:
+          - CACC
+          - CASH
+          - CHAR
+          - CISH
+          - COMM
+          - CPAC
+          - LLSV
+          - LOAN
+          - MGLD
+          - MOMA
+          - NREX
+          - ODFT
+          - ONDP
+          - OTHR
+          - SACC
+          - SLRY
+          - SVGS
+          - TAXE
+          - TRAN
+          - TRAS
+        name:
+          type: string
+          description: Name of the account given by the bank or the PSU in Online-Banking
+        status:
+          type: string
+          description: 'Status of the account, will be equal to one of the following: [enabled, deleted, blocked]'
+          enum:
+          - enabled
+          - deleted
+          - blocked
+        _links:
+          $ref: '#/components/schemas/Xs2aAccountLinks'
+    Xs2aConsentRequestResponse:
       required:
       - access
-      - combinedServiceIndicator
+      - authorisationId
+      - consentStatus
       - frequencyPerDay
-      - recurringIndicator
+      - lastActionDate
       - validUntil
       type: object
       properties:
+        consentStatus:
+          type: string
+          description: The status of the consent resource.
+          enum:
+          - received
+          - valid
+          - rejected
+          - expired
+          - terminatedByTpp
+          - revokedByPsu
+        consentId:
+          type: string
+          description: ID of the corresponding consent object as returned by an Account Information Consent Request.
+        authorisationId:
+          type: string
+          description: ID of the corresponding authorisation subresource
         access:
           $ref: '#/components/schemas/Xs2aAccess'
         recurringIndicator:
@@ -1101,9 +1198,88 @@ components:
           type: integer
           description: This field indicates the requested maximum frequency for an access per day. For a one-off access, this attribute is set to "1".
           format: int32
-        combinedServiceIndicator:
-          type: boolean
-          description: Sessions are not supported. Should be to "false".
+        lastActionDate:
+          type: string
+          description: This date is containing the date of the last action on the consent object either through the XS2A interface or the PSU/ASPSP interface having an impact on the status.
+          format: date
+        _links:
+          $ref: '#/components/schemas/Xs2aConsentRequestResponseLinks'
+    Xs2aAccountsResponse:
+      required:
+      - accounts
+      type: object
+      properties:
+        accounts:
+          type: array
+          description: List of account data.
+          items:
+            $ref: '#/components/schemas/Xs2aAccount'
+    Xs2aTransactionsResponse:
+      required:
+      - account
+      - transactions
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
+        transactions:
+          $ref: '#/components/schemas/Xs2aTransactions'
+    Xs2aAuthorisationRequestResponse:
+      type: object
+      properties:
+        scaStatus:
+          type: string
+          description: This data element is containing information about the status of the SCA method applied.
+          enum:
+          - received
+          - psuIdentified
+          - psuAuthenticated
+          - scaMethodSelected
+          - started
+          - unconfirmed
+          - finalised
+          - failed
+          - exempted
+        psuMessage:
+          type: string
+          description: Text to be displayed to the PSU.
+        authorisationId:
+          type: string
+          description: Resource identification of the authorisation sub-resource.
+        _links:
+          $ref: '#/components/schemas/Xs2aAuthorisationRequestResponseLinks'
+    Xs2aAuthorisationStatusRequestResponse:
+      required:
+      - scaStatus
+      type: object
+      properties:
+        scaStatus:
+          type: string
+          description: Status of the authorisation request.
+          enum:
+          - received
+          - psuIdentified
+          - psuAuthenticated
+          - scaMethodSelected
+          - started
+          - unconfirmed
+          - finalised
+          - failed
+          - exempted
+    Xs2aAmount:
+      required:
+      - amount
+      - currency
+      type: object
+      properties:
+        currency:
+          type: string
+          description: ISO 4217 Alpha 3 currency code
+        amount:
+          type: number
+          description: The amount given with fractional digits, where fractions must be compliant to the currency definition. Up to 14 significant figures. Negative amounts are signed by minus. The decimal separator is a dot.
+          format: double
+      description: The amount of the transaction as billed to the account.
     Xs2aTransaction:
       required:
       - transactionAmount
@@ -1151,146 +1327,73 @@ components:
           type: integer
           format: int32
       description: List of pending transactions.
-    Xs2aTransactions:
-      required:
-      - booked
+    Xs2aAccess:
       type: object
       properties:
-        booked:
+        accounts:
           type: array
-          description: List of booked transactions.
+          description: Is asking for detailed account information. If the array is empty, the TPP is asking for an accessible account list. This may be restricted in a PSU/ASPSP authorization dialogue.
           items:
-            $ref: '#/components/schemas/Xs2aTransaction'
-        pending:
-          type: array
-          description: List of pending transactions.
-          items:
-            $ref: '#/components/schemas/Xs2aTransaction'
-        _links:
-          $ref: '#/components/schemas/Xs2aTransactionLinks'
-      description: List of transaction data.
-    Xs2aAuthorisationStatusRequestResponse:
-      required:
-      - scaStatus
-      type: object
-      properties:
-        scaStatus:
-          type: string
-          description: Status of the authorisation request.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - unconfirmed
-          - finalised
-          - failed
-          - exempted
-    Xs2aTransactionSearchCriteriaEdgeToken:
-      type: object
-      properties:
-        edgeTokenTransactionTimestamp:
-          type: string
-          format: date-time
-        edgeTokenTransactionID:
-          $ref: '#/components/schemas/ID'
-        bookingStatus:
-          type: string
-          enum:
-          - booked
-          - pending
-          - both
-          - information
-          - all
-        dateFrom:
-          type: string
-          format: date
-        dateTo:
-          type: string
-          format: date
-    Xs2aTransactionsResponse:
-      required:
-      - account
-      - transactions
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Xs2aAccount'
-        transactions:
-          $ref: '#/components/schemas/Xs2aTransactions'
-    Xs2aAccountReference:
-      type: object
-      properties:
-        iban:
-          type: string
-          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
-        foreignAccountNumber:
-          type: string
-          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
-        ukSortCode:
-          type: string
-          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
-        ukAccountNumber:
-          type: string
-        currency:
-          type: string
-          description: Account currency
-      description: PSU's account number.
-    Xs2aBalancesResponse:
-      required:
-      - account
-      - balances
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Xs2aAccount'
+            $ref: '#/components/schemas/Xs2aAccountReference'
         balances:
           type: array
-          description: List of balances for the account.
+          description: Is asking for balances of the addressed accounts. If the array is empty, the TPP is asking for the balances of all accessible account lists. This may be restricted in a PSU/ASPSP authorization dialogue.
           items:
-            $ref: '#/components/schemas/Xs2aBalance'
-    ID:
-      type: object
-      properties:
-        temporaryKey:
-          type: boolean
-    Xs2aConsentStatusResponse:
+            $ref: '#/components/schemas/Xs2aAccountReference'
+        transactions:
+          type: array
+          description: Is asking for transactions of the addressed accounts. If the array is empty, the TPP is asking for the transactions of all accessible account lists. This may be restricted in a PSU/ASPSP authorization dialogue.
+          items:
+            $ref: '#/components/schemas/Xs2aAccountReference'
+        availableAccounts:
+          type: string
+          description: Not supported.
+        availableAccountsWithBalance:
+          type: string
+          description: Not supported.
+        allPsd2:
+          type: string
+          description: Not supported.
+        restrictedTo:
+          type: array
+          description: Limits the addressed accounts to those of the indicate types. If the array is empty, the TPP is asking for all accessible accounts
+          items:
+            type: string
+            description: Limits the addressed accounts to those of the indicate types. If the array is empty, the TPP is asking for all accessible accounts
+            enum:
+            - CACC
+            - CASH
+            - CHAR
+            - CISH
+            - COMM
+            - CPAC
+            - LLSV
+            - LOAN
+            - MGLD
+            - MOMA
+            - NREX
+            - ODFT
+            - ONDP
+            - OTHR
+            - SACC
+            - SLRY
+            - SVGS
+            - TAXE
+            - TRAN
+            - TRAS
+      description: Requested access services.
+    Xs2aAuthorisationsRequestResponse:
       required:
-      - consentStatus
+      - authorisationIds
       type: object
       properties:
-        consentStatus:
-          type: string
-          description: This is the overall lifecycle status of the consent.
-          enum:
-          - received
-          - valid
-          - rejected
-          - expired
-          - terminatedByTpp
-          - revokedByPsu
-    Xs2aAuthorisationRequestResponseLinks:
-      type: object
-      properties:
-        scaOAuth:
-          type: string
-          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
-        scaRedirect:
-          type: string
-          description: A link to the OAuth2 authorization resource.
-        scaStatus:
-          type: string
-          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
-        self:
-          type: string
-          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
-        confirmation:
-          type: string
-          description: The link to the authorisation sub-resource.
-        status:
-          type: string
-          description: The link to retrieve the transaction status of a resource.
+        authorisationIds:
+          type: array
+          description: List of authorisation request ids.
+          items:
+            type: string
+            description: List of authorisation request ids.
+            format: uuid
     TppMessage:
       type: object
       properties:
@@ -1349,126 +1452,6 @@ components:
         category:
           type: string
       description: List of messages.
-    Xs2aConsentRequestResponseLinks:
-      type: object
-      properties:
-        scaOAuth:
-          type: string
-          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
-        scaRedirect:
-          type: string
-          description: A link to the OAuth2 authorization resource.
-        scaStatus:
-          type: string
-          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
-        self:
-          type: string
-          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
-        confirmation:
-          type: string
-          description: The link to the authorisation sub-resource.
-        status:
-          type: string
-          description: The link to retrieve the transaction status of a resource.
-      description: Consent links.
-    Xs2aAmount:
-      required:
-      - amount
-      - currency
-      type: object
-      properties:
-        currency:
-          type: string
-          description: ISO 4217 Alpha 3 currency code
-        amount:
-          type: number
-          description: The amount given with fractional digits, where fractions must be compliant to the currency definition. Up to 14 significant figures. Negative amounts are signed by minus. The decimal separator is a dot.
-          format: double
-      description: The amount of the transaction as billed to the account.
-    Xs2aConsentRequestResponse:
-      required:
-      - access
-      - authorisationId
-      - consentStatus
-      - frequencyPerDay
-      - lastActionDate
-      - validUntil
-      type: object
-      properties:
-        consentStatus:
-          type: string
-          description: The status of the consent resource.
-          enum:
-          - received
-          - valid
-          - rejected
-          - expired
-          - terminatedByTpp
-          - revokedByPsu
-        consentId:
-          type: string
-          description: ID of the corresponding consent object as returned by an Account Information Consent Request.
-        authorisationId:
-          type: string
-          description: ID of the corresponding authorisation subresource
-        access:
-          $ref: '#/components/schemas/Xs2aAccess'
-        recurringIndicator:
-          type: boolean
-          description: '"true", if the consent is for recurring access to the account data. "false", if the consent is for one access to the account data.'
-        validUntil:
-          type: string
-          description: 'This parameter is requesting a valid until date for the requested consent. The content is the local ASPSP date in ISODate Format, e.g. 2017-10-30. If a maximal available date is requested, a date in far future is to be used: "9999-12-31". The consent object to be retrieved by the GET Consent.'
-          format: date
-        frequencyPerDay:
-          type: integer
-          description: This field indicates the requested maximum frequency for an access per day. For a one-off access, this attribute is set to "1".
-          format: int32
-        lastActionDate:
-          type: string
-          description: This date is containing the date of the last action on the consent object either through the XS2A interface or the PSU/ASPSP interface having an impact on the status.
-          format: date
-        _links:
-          $ref: '#/components/schemas/Xs2aConsentRequestResponseLinks'
-    Xs2aAuthorisationRequestResponse:
-      type: object
-      properties:
-        scaStatus:
-          type: string
-          description: This data element is containing information about the status of the SCA method applied.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - unconfirmed
-          - finalised
-          - failed
-          - exempted
-        psuMessage:
-          type: string
-          description: Text to be displayed to the PSU.
-        authorisationId:
-          type: string
-          description: Resource identification of the authorisation sub-resource.
-        _links:
-          $ref: '#/components/schemas/Xs2aAuthorisationRequestResponseLinks'
-    Xs2aTransactionLinks:
-      required:
-      - account
-      type: object
-      properties:
-        account:
-          type: string
-          description: A link to the resource providing the details of one account.
-        first:
-          type: string
-          description: Navigation link for paginated account reports.
-        next:
-          type: string
-          description: Navigation link for paginated account reports.
-      description: Transaction links.
     Xs2aBalance:
       required:
       - balanceAmount
@@ -1494,15 +1477,104 @@ components:
           type: boolean
           description: A flag indicating if the credit limit of the corresponding account is included in the calculation of the balance, where applicable
       description: List of balances for the account.
-    TppMessages:
+    Xs2aTransactionSearchCriteriaEdgeToken:
       type: object
       properties:
-        tppMessages:
+        edgeTokenTransactionTimestamp:
+          type: string
+          format: date-time
+        edgeTokenTransactionID:
+          $ref: '#/components/schemas/ID'
+        bookingStatus:
+          type: string
+          enum:
+          - booked
+          - pending
+          - both
+          - information
+          - all
+        dateFrom:
+          type: string
+          format: date
+        dateTo:
+          type: string
+          format: date
+    Xs2aConsentRequest:
+      required:
+      - access
+      - combinedServiceIndicator
+      - frequencyPerDay
+      - recurringIndicator
+      - validUntil
+      type: object
+      properties:
+        access:
+          $ref: '#/components/schemas/Xs2aAccess'
+        recurringIndicator:
+          type: boolean
+          description: '"true", if the consent is for recurring access to the account data. "false", if the consent is for one access to the account data.'
+        validUntil:
+          type: string
+          description: 'This parameter is requesting a valid until date for the requested consent. The content is the local ASPSP date in ISODate Format, e.g. 2017-10-30. If a maximal available date is requested, a date in far future is to be used: "9999-12-31". The consent object to be retrieved by the GET Consent.'
+          format: date
+        frequencyPerDay:
+          type: integer
+          description: This field indicates the requested maximum frequency for an access per day. For a one-off access, this attribute is set to "1".
+          format: int32
+        combinedServiceIndicator:
+          type: boolean
+          description: Sessions are not supported. Should be to "false".
+    Xs2aBalancesResponse:
+      required:
+      - account
+      - balances
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
+        balances:
           type: array
-          description: List of messages.
+          description: List of balances for the account.
           items:
-            $ref: '#/components/schemas/TppMessage'
-    Xs2aAccount:
+            $ref: '#/components/schemas/Xs2aBalance'
+    Xs2aConsentRequestResponseLinks:
+      type: object
+      properties:
+        scaOAuth:
+          type: string
+          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
+        scaRedirect:
+          type: string
+          description: A link to the OAuth2 authorization resource.
+        scaStatus:
+          type: string
+          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
+        self:
+          type: string
+          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
+        confirmation:
+          type: string
+          description: The link to the authorisation sub-resource.
+        status:
+          type: string
+          description: The link to retrieve the transaction status of a resource.
+      description: Consent links.
+    Xs2aTransactionLinks:
+      required:
+      - account
+      type: object
+      properties:
+        account:
+          type: string
+          description: A link to the resource providing the details of one account.
+        first:
+          type: string
+          description: Navigation link for paginated account reports.
+        next:
+          type: string
+          description: Navigation link for paginated account reports.
+      description: Transaction links.
+    Xs2aAccountReference:
       type: object
       properties:
         iban:
@@ -1519,113 +1591,28 @@ components:
         currency:
           type: string
           description: Account currency
-        resourceId:
+      description: PSU's account number.
+    Xs2aAuthorisationRequestResponseLinks:
+      type: object
+      properties:
+        scaOAuth:
           type: string
-          description: This is the data element to be used in the path when retrieving data from a dedicated account, cp. Section 6.6.3 or Section 6.6.4 below. This shall be filled, if addressable resource are created by the ASPSP on the /accounts or /card-accounts endpoint.
-        cashAccountType:
+          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
+        scaRedirect:
           type: string
-          description: ExternalCashAccountType1Code from ISO 20022
-          enum:
-          - CACC
-          - CASH
-          - CHAR
-          - CISH
-          - COMM
-          - CPAC
-          - LLSV
-          - LOAN
-          - MGLD
-          - MOMA
-          - NREX
-          - ODFT
-          - ONDP
-          - OTHR
-          - SACC
-          - SLRY
-          - SVGS
-          - TAXE
-          - TRAN
-          - TRAS
-        name:
+          description: A link to the OAuth2 authorization resource.
+        scaStatus:
           type: string
-          description: Name of the account given by the bank or the PSU in Online-Banking
+          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
+        self:
+          type: string
+          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
+        confirmation:
+          type: string
+          description: The link to the authorisation sub-resource.
         status:
           type: string
-          description: 'Status of the account, will be equal to one of the following: [enabled, deleted, blocked]'
-          enum:
-          - enabled
-          - deleted
-          - blocked
-        _links:
-          $ref: '#/components/schemas/Xs2aAccountLinks'
-    Xs2aAccess:
-      type: object
-      properties:
-        accounts:
-          type: array
-          description: Is asking for detailed account information. If the array is empty, the TPP is asking for an accessible account list. This may be restricted in a PSU/ASPSP authorization dialogue.
-          items:
-            $ref: '#/components/schemas/Xs2aAccountReference'
-        balances:
-          type: array
-          description: Is asking for balances of the addressed accounts. If the array is empty, the TPP is asking for the balances of all accessible account lists. This may be restricted in a PSU/ASPSP authorization dialogue.
-          items:
-            $ref: '#/components/schemas/Xs2aAccountReference'
-        transactions:
-          type: array
-          description: Is asking for transactions of the addressed accounts. If the array is empty, the TPP is asking for the transactions of all accessible account lists. This may be restricted in a PSU/ASPSP authorization dialogue.
-          items:
-            $ref: '#/components/schemas/Xs2aAccountReference'
-        availableAccounts:
-          type: string
-          description: Not supported.
-        availableAccountsWithBalance:
-          type: string
-          description: Not supported.
-        allPsd2:
-          type: string
-          description: Not supported.
-        restrictedTo:
-          type: array
-          description: Limits the addressed accounts to those of the indicate types. If the array is empty, the TPP is asking for all accessible accounts
-          items:
-            type: string
-            description: Limits the addressed accounts to those of the indicate types. If the array is empty, the TPP is asking for all accessible accounts
-            enum:
-            - CACC
-            - CASH
-            - CHAR
-            - CISH
-            - COMM
-            - CPAC
-            - LLSV
-            - LOAN
-            - MGLD
-            - MOMA
-            - NREX
-            - ODFT
-            - ONDP
-            - OTHR
-            - SACC
-            - SLRY
-            - SVGS
-            - TAXE
-            - TRAN
-            - TRAS
-      description: Requested access services.
-    Xs2aAccountLinks:
-      type: object
-      properties:
-        account:
-          type: string
-          description: A link to the resource providing the details of a dedicated account.
-        transactions:
-          type: string
-          description: A link to the resource providing the transaction history of a dedicated account.
-        balances:
-          type: string
-          description: A link to the resource providing the balance of a dedicated account.
-      description: Links to the account, which can be directly used for retrieving account information from this dedicated account. Links to "balances" and/or "transactions" These links are only supported, when the corresponding consent has been already granted.
+          description: The link to retrieve the transaction status of a resource.
     Xs2aAccountResponse:
       required:
       - account
@@ -1633,6 +1620,19 @@ components:
       properties:
         account:
           $ref: '#/components/schemas/Xs2aAccount'
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
+    ID:
+      type: object
+      properties:
+        temporaryKey:
+          type: boolean
 externalDocs:
   description: Berlin Group XS2A Implementation Version 1.3
   url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf

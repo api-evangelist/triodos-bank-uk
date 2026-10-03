@@ -4561,6 +4561,27 @@ paths:
                 $ref: '#/components/schemas/TppMessages'
 components:
   schemas:
+    Xs2aAuthorisationRequestResponseLinks:
+      type: object
+      properties:
+        scaOAuth:
+          type: string
+          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
+        scaRedirect:
+          type: string
+          description: A link to the OAuth2 authorization resource.
+        scaStatus:
+          type: string
+          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
+        self:
+          type: string
+          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
+        confirmation:
+          type: string
+          description: The link to the authorisation sub-resource.
+        status:
+          type: string
+          description: The link to retrieve the transaction status of a resource.
     Xs2aStatusRequestResponse:
       required:
       - transactionStatus
@@ -4585,6 +4606,59 @@ components:
         fundsAvailable:
           type: boolean
           description: This data element is contained, if a funds check has been performed and if the transactionStatus is "ACTC", "ACWC" or "ACCP".
+    Xs2aPaymentRequestResponseLinks:
+      type: object
+      properties:
+        scaOAuth:
+          type: string
+          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
+        scaRedirect:
+          type: string
+          description: A link to the OAuth2 authorization resource.
+        scaStatus:
+          type: string
+          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
+        self:
+          type: string
+          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
+        confirmation:
+          type: string
+          description: The link to the authorisation sub-resource.
+        status:
+          type: string
+          description: The link to retrieve the transaction status of a resource.
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
+    Xs2aAuthorisationRequestResponse:
+      type: object
+      properties:
+        scaStatus:
+          type: string
+          description: This data element is containing information about the status of the SCA method applied.
+          enum:
+          - received
+          - psuIdentified
+          - psuAuthenticated
+          - scaMethodSelected
+          - started
+          - unconfirmed
+          - finalised
+          - failed
+          - exempted
+        psuMessage:
+          type: string
+          description: Text to be displayed to the PSU.
+        authorisationId:
+          type: string
+          description: Resource identification of the authorisation sub-resource.
+        _links:
+          $ref: '#/components/schemas/Xs2aAuthorisationRequestResponseLinks'
     Xs2aPaymentRequestResponse:
       required:
       - _links
@@ -4622,69 +4696,6 @@ components:
           description: Debtor name.
         _links:
           $ref: '#/components/schemas/Xs2aPaymentRequestResponseLinks'
-    Xs2aAuthorisationRequestResponseLinks:
-      type: object
-      properties:
-        scaOAuth:
-          type: string
-          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
-        scaRedirect:
-          type: string
-          description: A link to the OAuth2 authorization resource.
-        scaStatus:
-          type: string
-          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
-        self:
-          type: string
-          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
-        confirmation:
-          type: string
-          description: The link to the authorisation sub-resource.
-        status:
-          type: string
-          description: The link to retrieve the transaction status of a resource.
-    Xs2aAuthorisationRequestResponse:
-      type: object
-      properties:
-        scaStatus:
-          type: string
-          description: This data element is containing information about the status of the SCA method applied.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - unconfirmed
-          - finalised
-          - failed
-          - exempted
-        psuMessage:
-          type: string
-          description: Text to be displayed to the PSU.
-        authorisationId:
-          type: string
-          description: Resource identification of the authorisation sub-resource.
-        _links:
-          $ref: '#/components/schemas/Xs2aAuthorisationRequestResponseLinks'
-    Xs2aAuthorisationStatusRequestResponse:
-      required:
-      - scaStatus
-      type: object
-      properties:
-        scaStatus:
-          type: string
-          description: Status of the authorisation request.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - unconfirmed
-          - finalised
-          - failed
-          - exempted
     Xs2aAuthorisationsRequestResponse:
       required:
       - authorisationIds
@@ -4755,14 +4766,6 @@ components:
         category:
           type: string
       description: List of messages.
-    TppMessages:
-      type: object
-      properties:
-        tppMessages:
-          type: array
-          description: List of messages.
-          items:
-            $ref: '#/components/schemas/TppMessage'
     Xs2aAccountReference:
       type: object
       properties:
@@ -4781,27 +4784,24 @@ components:
           type: string
           description: Account currency
       description: PSU's account number.
-    Xs2aPaymentRequestResponseLinks:
+    Xs2aAuthorisationStatusRequestResponse:
+      required:
+      - scaStatus
       type: object
       properties:
-        scaOAuth:
-          type: string
-          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
-        scaRedirect:
-          type: string
-          description: A link to the OAuth2 authorization resource.
         scaStatus:
           type: string
-          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
-        self:
-          type: string
-          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
-        confirmation:
-          type: string
-          description: The link to the authorisation sub-resource.
-        status:
-          type: string
-          description: The link to retrieve the transaction status of a resource.
+          description: Status of the authorisation request.
+          enum:
+          - received
+          - psuIdentified
+          - psuAuthenticated
+          - scaMethodSelected
+          - started
+          - unconfirmed
+          - finalised
+          - failed
+          - exempted
 externalDocs:
   description: Berlin Group XS2A Implementation Version 1.3
   url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf

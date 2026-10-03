@@ -423,6 +423,64 @@ paths:
                 $ref: '#/components/schemas/TppMessages'
 components:
   schemas:
+    Xs2aAmount:
+      required:
+      - amount
+      - currency
+      type: object
+      properties:
+        currency:
+          type: string
+          description: ISO 4217 Alpha 3 currency code
+        amount:
+          type: number
+          description: The amount given with fractional digits, where fractions must be compliant to the currency definition. Up to 14 significant figures. Negative amounts are signed by minus. The decimal separator is a dot.
+          format: double
+      description: The amount of the transaction as billed to the account.
+    Xs2aTransactions:
+      required:
+      - booked
+      type: object
+      properties:
+        booked:
+          type: array
+          description: List of booked transactions.
+          items:
+            $ref: '#/components/schemas/Xs2aTransaction'
+        pending:
+          type: array
+          description: List of pending transactions.
+          items:
+            $ref: '#/components/schemas/Xs2aTransaction'
+        _links:
+          $ref: '#/components/schemas/Xs2aTransactionLinks'
+      description: List of transaction data.
+    Xs2aAccountLinks:
+      type: object
+      properties:
+        account:
+          type: string
+          description: A link to the resource providing the details of a dedicated account.
+        transactions:
+          type: string
+          description: A link to the resource providing the transaction history of a dedicated account.
+        balances:
+          type: string
+          description: A link to the resource providing the balance of a dedicated account.
+      description: Links to the account, which can be directly used for retrieving account information from this dedicated account. Links to "balances" and/or "transactions" These links are only supported, when the corresponding consent has been already granted.
+    Xs2aBalancesResponse:
+      required:
+      - account
+      - balances
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
+        balances:
+          type: array
+          description: List of balances for the account.
+          items:
+            $ref: '#/components/schemas/Xs2aBalance'
     Xs2aTransaction:
       required:
       - transactionAmount
@@ -470,24 +528,62 @@ components:
           type: integer
           format: int32
       description: List of pending transactions.
-    Xs2aTransactions:
-      required:
-      - booked
+    Xs2aAccount:
       type: object
       properties:
-        booked:
-          type: array
-          description: List of booked transactions.
-          items:
-            $ref: '#/components/schemas/Xs2aTransaction'
-        pending:
-          type: array
-          description: List of pending transactions.
-          items:
-            $ref: '#/components/schemas/Xs2aTransaction'
+        iban:
+          type: string
+          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
+        foreignAccountNumber:
+          type: string
+          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
+        ukSortCode:
+          type: string
+          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
+        ukAccountNumber:
+          type: string
+        currency:
+          type: string
+          description: Account currency
+        resourceId:
+          type: string
+          description: This is the data element to be used in the path when retrieving data from a dedicated account, cp. Section 6.6.3 or Section 6.6.4 below. This shall be filled, if addressable resource are created by the ASPSP on the /accounts or /card-accounts endpoint.
+        cashAccountType:
+          type: string
+          description: ExternalCashAccountType1Code from ISO 20022
+          enum:
+          - CACC
+          - CASH
+          - CHAR
+          - CISH
+          - COMM
+          - CPAC
+          - LLSV
+          - LOAN
+          - MGLD
+          - MOMA
+          - NREX
+          - ODFT
+          - ONDP
+          - OTHR
+          - SACC
+          - SLRY
+          - SVGS
+          - TAXE
+          - TRAN
+          - TRAS
+        name:
+          type: string
+          description: Name of the account given by the bank or the PSU in Online-Banking
+        status:
+          type: string
+          description: 'Status of the account, will be equal to one of the following: [enabled, deleted, blocked]'
+          enum:
+          - enabled
+          - deleted
+          - blocked
         _links:
-          $ref: '#/components/schemas/Xs2aTransactionLinks'
-      description: List of transaction data.
+          $ref: '#/components/schemas/Xs2aAccountLinks'
     Xs2aAccountsResponse:
       required:
       - accounts
@@ -498,6 +594,23 @@ components:
           description: List of account data.
           items:
             $ref: '#/components/schemas/Xs2aAccount'
+    Xs2aTransactionsResponse:
+      required:
+      - account
+      - transactions
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
+        transactions:
+          $ref: '#/components/schemas/Xs2aTransactions'
+    Xs2aAccountResponse:
+      required:
+      - account
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Xs2aAccount'
     TppMessage:
       type: object
       properties:
@@ -571,6 +684,14 @@ components:
           type: string
           description: Navigation link for paginated account reports.
       description: Transaction links.
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
     Xs2aBalance:
       required:
       - balanceAmount
@@ -596,16 +717,6 @@ components:
           type: boolean
           description: A flag indicating if the credit limit of the corresponding account is included in the calculation of the balance, where applicable
       description: List of balances for the account.
-    Xs2aTransactionsResponse:
-      required:
-      - account
-      - transactions
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Xs2aAccount'
-        transactions:
-          $ref: '#/components/schemas/Xs2aTransactions'
     Xs2aTransactionSearchCriteriaEdgeToken:
       type: object
       properties:
@@ -628,117 +739,6 @@ components:
         dateTo:
           type: string
           format: date
-    Xs2aAmount:
-      required:
-      - amount
-      - currency
-      type: object
-      properties:
-        currency:
-          type: string
-          description: ISO 4217 Alpha 3 currency code
-        amount:
-          type: number
-          description: The amount given with fractional digits, where fractions must be compliant to the currency definition. Up to 14 significant figures. Negative amounts are signed by minus. The decimal separator is a dot.
-          format: double
-      description: The amount of the transaction as billed to the account.
-    Xs2aAccount:
-      type: object
-      properties:
-        iban:
-          type: string
-          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
-        foreignAccountNumber:
-          type: string
-          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
-        ukSortCode:
-          type: string
-          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
-        ukAccountNumber:
-          type: string
-        currency:
-          type: string
-          description: Account currency
-        resourceId:
-          type: string
-          description: This is the data element to be used in the path when retrieving data from a dedicated account, cp. Section 6.6.3 or Section 6.6.4 below. This shall be filled, if addressable resource are created by the ASPSP on the /accounts or /card-accounts endpoint.
-        cashAccountType:
-          type: string
-          description: ExternalCashAccountType1Code from ISO 20022
-          enum:
-          - CACC
-          - CASH
-          - CHAR
-          - CISH
-          - COMM
-          - CPAC
-          - LLSV
-          - LOAN
-          - MGLD
-          - MOMA
-          - NREX
-          - ODFT
-          - ONDP
-          - OTHR
-          - SACC
-          - SLRY
-          - SVGS
-          - TAXE
-          - TRAN
-          - TRAS
-        name:
-          type: string
-          description: Name of the account given by the bank or the PSU in Online-Banking
-        status:
-          type: string
-          description: 'Status of the account, will be equal to one of the following: [enabled, deleted, blocked]'
-          enum:
-          - enabled
-          - deleted
-          - blocked
-        _links:
-          $ref: '#/components/schemas/Xs2aAccountLinks'
-    Xs2aAccountLinks:
-      type: object
-      properties:
-        account:
-          type: string
-          description: A link to the resource providing the details of a dedicated account.
-        transactions:
-          type: string
-          description: A link to the resource providing the transaction history of a dedicated account.
-        balances:
-          type: string
-          description: A link to the resource providing the balance of a dedicated account.
-      description: Links to the account, which can be directly used for retrieving account information from this dedicated account. Links to "balances" and/or "transactions" These links are only supported, when the corresponding consent has been already granted.
-    Xs2aAccountResponse:
-      required:
-      - account
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Xs2aAccount'
-    TppMessages:
-      type: object
-      properties:
-        tppMessages:
-          type: array
-          description: List of messages.
-          items:
-            $ref: '#/components/schemas/TppMessage'
-    Xs2aBalancesResponse:
-      required:
-      - account
-      - balances
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/Xs2aAccount'
-        balances:
-          type: array
-          description: List of balances for the account.
-          items:
-            $ref: '#/components/schemas/Xs2aBalance'
     ID:
       type: object
       properties:
