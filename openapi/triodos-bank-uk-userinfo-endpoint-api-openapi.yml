@@ -90,79 +90,44 @@ paths:
           description: invalid_token or access_denied
 components:
   schemas:
-    JWSHeader:
+    Reason:
       type: object
       properties:
-        customParams:
+        value:
+          type: string
+    JWTClaimsSet:
+      type: object
+      properties:
+        claims:
           type: object
           additionalProperties:
             type: object
-        parsedBase64URL:
-          $ref: '#/components/schemas/Base64URL'
-        jwk:
-          $ref: '#/components/schemas/JWK'
-        algorithm:
-          $ref: '#/components/schemas/JWSAlgorithm'
-        base64URLEncodePayload:
-          type: boolean
-        includedParams:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        keyID:
-          type: string
-        jwkurl:
-          type: string
-          format: uri
-        x509CertURL:
-          type: string
-          format: uri
-        x509CertThumbprint:
-          $ref: '#/components/schemas/Base64URL'
-        x509CertSHA256Thumbprint:
-          $ref: '#/components/schemas/Base64URL'
-        x509CertChain:
-          type: array
-          items:
-            $ref: '#/components/schemas/Base64'
-        type:
-          $ref: '#/components/schemas/JOSEObjectType'
-        contentType:
-          type: string
-        criticalParams:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-    KeyType:
-      type: object
-      properties:
-        value:
-          type: string
-        requirement:
-          type: string
-          enum:
-          - REQUIRED
-          - RECOMMENDED
-          - OPTIONAL
-    KeyRevocation:
-      type: object
-      properties:
-        reason:
-          $ref: '#/components/schemas/Reason'
-        revocationTime:
+        expirationTime:
           type: string
           format: date-time
-    KeyUse:
-      type: object
-      properties:
-        value:
+        issuer:
           type: string
-    Base64:
-      type: object
+        subject:
+          type: string
+        audience:
+          type: array
+          items:
+            type: string
+        notBeforeTime:
+          type: string
+          format: date-time
+        issueTime:
+          type: string
+          format: date-time
+        jwtid:
+          type: string
     Base64URL:
       type: object
+    JOSEObjectType:
+      type: object
+      properties:
+        type:
+          type: string
     JWK:
       type: object
       properties:
@@ -336,10 +301,10 @@ components:
           type: object
           additionalProperties:
             type: object
-    JWSAlgorithm:
+    KeyType:
       type: object
       properties:
-        name:
+        value:
           type: string
         requirement:
           type: string
@@ -347,32 +312,59 @@ components:
           - REQUIRED
           - RECOMMENDED
           - OPTIONAL
-    JWTClaimsSet:
+    KeyRevocation:
       type: object
       properties:
-        claims:
+        reason:
+          $ref: '#/components/schemas/Reason'
+        revocationTime:
+          type: string
+          format: date-time
+    JWSHeader:
+      type: object
+      properties:
+        customParams:
           type: object
           additionalProperties:
             type: object
-        expirationTime:
-          type: string
-          format: date-time
-        issuer:
-          type: string
-        subject:
-          type: string
-        audience:
+        parsedBase64URL:
+          $ref: '#/components/schemas/Base64URL'
+        jwk:
+          $ref: '#/components/schemas/JWK'
+        algorithm:
+          $ref: '#/components/schemas/JWSAlgorithm'
+        base64URLEncodePayload:
+          type: boolean
+        includedParams:
+          uniqueItems: true
           type: array
           items:
             type: string
-        notBeforeTime:
+        keyID:
           type: string
-          format: date-time
-        issueTime:
+        jwkurl:
           type: string
-          format: date-time
-        jwtid:
+          format: uri
+        x509CertURL:
           type: string
+          format: uri
+        x509CertThumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertSHA256Thumbprint:
+          $ref: '#/components/schemas/Base64URL'
+        x509CertChain:
+          type: array
+          items:
+            $ref: '#/components/schemas/Base64'
+        type:
+          $ref: '#/components/schemas/JOSEObjectType'
+        contentType:
+          type: string
+        criticalParams:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
     SignedJWT:
       type: object
       properties:
@@ -411,16 +403,6 @@ components:
           - BASE64URL
           - JWS_OBJECT
           - SIGNED_JWT
-    JOSEObjectType:
-      type: object
-      properties:
-        type:
-          type: string
-    Reason:
-      type: object
-      properties:
-        value:
-          type: string
     Algorithm:
       type: object
       properties:
@@ -432,6 +414,24 @@ components:
           - REQUIRED
           - RECOMMENDED
           - OPTIONAL
+    JWSAlgorithm:
+      type: object
+      properties:
+        name:
+          type: string
+        requirement:
+          type: string
+          enum:
+          - REQUIRED
+          - RECOMMENDED
+          - OPTIONAL
+    Base64:
+      type: object
+    KeyUse:
+      type: object
+      properties:
+        value:
+          type: string
 externalDocs:
   description: OpenID Connect 1.0 specifications
   url: https://openid.net/connect/

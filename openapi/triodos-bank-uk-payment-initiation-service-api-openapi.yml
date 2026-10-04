@@ -4561,51 +4561,6 @@ paths:
                 $ref: '#/components/schemas/TppMessages'
 components:
   schemas:
-    Xs2aAuthorisationRequestResponseLinks:
-      type: object
-      properties:
-        scaOAuth:
-          type: string
-          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
-        scaRedirect:
-          type: string
-          description: A link to the OAuth2 authorization resource.
-        scaStatus:
-          type: string
-          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
-        self:
-          type: string
-          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
-        confirmation:
-          type: string
-          description: The link to the authorisation sub-resource.
-        status:
-          type: string
-          description: The link to retrieve the transaction status of a resource.
-    Xs2aStatusRequestResponse:
-      required:
-      - transactionStatus
-      type: object
-      properties:
-        transactionStatus:
-          type: string
-          description: Transaction status.
-          enum:
-          - RCVD
-          - PDNG
-          - ACCP
-          - ACTC
-          - ACWC
-          - ACWP
-          - ACSP
-          - ACSC
-          - RJCT
-          - CANC
-          - PATC
-          - ACFC
-        fundsAvailable:
-          type: boolean
-          description: This data element is contained, if a funds check has been performed and if the transactionStatus is "ACTC", "ACWC" or "ACCP".
     Xs2aPaymentRequestResponseLinks:
       type: object
       properties:
@@ -4627,87 +4582,6 @@ components:
         status:
           type: string
           description: The link to retrieve the transaction status of a resource.
-    TppMessages:
-      type: object
-      properties:
-        tppMessages:
-          type: array
-          description: List of messages.
-          items:
-            $ref: '#/components/schemas/TppMessage'
-    Xs2aAuthorisationRequestResponse:
-      type: object
-      properties:
-        scaStatus:
-          type: string
-          description: This data element is containing information about the status of the SCA method applied.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - unconfirmed
-          - finalised
-          - failed
-          - exempted
-        psuMessage:
-          type: string
-          description: Text to be displayed to the PSU.
-        authorisationId:
-          type: string
-          description: Resource identification of the authorisation sub-resource.
-        _links:
-          $ref: '#/components/schemas/Xs2aAuthorisationRequestResponseLinks'
-    Xs2aPaymentRequestResponse:
-      required:
-      - _links
-      - authorisationId
-      - paymentId
-      - transactionStatus
-      type: object
-      properties:
-        transactionStatus:
-          type: string
-          description: Transaction status.
-          enum:
-          - RCVD
-          - PDNG
-          - ACCP
-          - ACTC
-          - ACWC
-          - ACWP
-          - ACSP
-          - ACSC
-          - RJCT
-          - CANC
-          - PATC
-          - ACFC
-        paymentId:
-          type: string
-          description: Transaction ID.
-        authorisationId:
-          type: string
-          description: ID of the corresponding authorisation subresource
-        debtorAccount:
-          $ref: '#/components/schemas/Xs2aAccountReference'
-        debtorName:
-          type: string
-          description: Debtor name.
-        _links:
-          $ref: '#/components/schemas/Xs2aPaymentRequestResponseLinks'
-    Xs2aAuthorisationsRequestResponse:
-      required:
-      - authorisationIds
-      type: object
-      properties:
-        authorisationIds:
-          type: array
-          description: List of authorisation request ids.
-          items:
-            type: string
-            description: List of authorisation request ids.
-            format: uuid
     TppMessage:
       type: object
       properties:
@@ -4766,24 +4640,39 @@ components:
         category:
           type: string
       description: List of messages.
-    Xs2aAccountReference:
+    Xs2aAuthorisationsRequestResponse:
+      required:
+      - authorisationIds
       type: object
       properties:
-        iban:
+        authorisationIds:
+          type: array
+          description: List of authorisation request ids.
+          items:
+            type: string
+            description: List of authorisation request ids.
+            format: uuid
+    Xs2aAuthorisationRequestResponseLinks:
+      type: object
+      properties:
+        scaOAuth:
           type: string
-          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
-        foreignAccountNumber:
+          description: A link to the OAuth2 configuration of the ASPSP's authorisation server.
+        scaRedirect:
           type: string
-          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
-        ukSortCode:
+          description: A link to the OAuth2 authorization resource.
+        scaStatus:
           type: string
-          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
-        ukAccountNumber:
+          description: A link to the authorisation sub-resource. In practice this is the same as the confirmation link.
+        self:
           type: string
-        currency:
+          description: The link to the resource created by the undergoing request. This link can be used to retrieve the resource data.
+        confirmation:
           type: string
-          description: Account currency
-      description: PSU's account number.
+          description: The link to the authorisation sub-resource.
+        status:
+          type: string
+          description: The link to retrieve the transaction status of a resource.
     Xs2aAuthorisationStatusRequestResponse:
       required:
       - scaStatus
@@ -4802,6 +4691,117 @@ components:
           - finalised
           - failed
           - exempted
+    TppMessages:
+      type: object
+      properties:
+        tppMessages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/TppMessage'
+    Xs2aStatusRequestResponse:
+      required:
+      - transactionStatus
+      type: object
+      properties:
+        transactionStatus:
+          type: string
+          description: Transaction status.
+          enum:
+          - RCVD
+          - PDNG
+          - ACCP
+          - ACTC
+          - ACWC
+          - ACWP
+          - ACSP
+          - ACSC
+          - RJCT
+          - CANC
+          - PATC
+          - ACFC
+        fundsAvailable:
+          type: boolean
+          description: This data element is contained, if a funds check has been performed and if the transactionStatus is "ACTC", "ACWC" or "ACCP".
+    Xs2aPaymentRequestResponse:
+      required:
+      - _links
+      - authorisationId
+      - paymentId
+      - transactionStatus
+      type: object
+      properties:
+        transactionStatus:
+          type: string
+          description: Transaction status.
+          enum:
+          - RCVD
+          - PDNG
+          - ACCP
+          - ACTC
+          - ACWC
+          - ACWP
+          - ACSP
+          - ACSC
+          - RJCT
+          - CANC
+          - PATC
+          - ACFC
+        paymentId:
+          type: string
+          description: Transaction ID.
+        authorisationId:
+          type: string
+          description: ID of the corresponding authorisation subresource
+        debtorAccount:
+          $ref: '#/components/schemas/Xs2aAccountReference'
+        debtorName:
+          type: string
+          description: Debtor name.
+        _links:
+          $ref: '#/components/schemas/Xs2aPaymentRequestResponseLinks'
+    Xs2aAccountReference:
+      type: object
+      properties:
+        iban:
+          type: string
+          description: The iban is used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If an iban is provided then ukSortCode and ukAccountNumber should be left empty.
+        foreignAccountNumber:
+          type: string
+          description: The foreignAccountNumber is used in the body of the cross-border-credit-transfers Payment Request Message for creditor account, If a foreignAccountNumber is provided then iban, ukSortCode and ukAccountNumber should be left empty.
+        ukSortCode:
+          type: string
+          description: The ukSortCode and ukAccountNumber are used in the body of the Consent or Payment Request Message for retrieving account access consent or initiating a payment for this payment account, cp. Section 6.3. If ukSortCode and ukAccountNumber are provided then iban should be left empty.
+        ukAccountNumber:
+          type: string
+        currency:
+          type: string
+          description: Account currency
+      description: PSU's account number.
+    Xs2aAuthorisationRequestResponse:
+      type: object
+      properties:
+        scaStatus:
+          type: string
+          description: This data element is containing information about the status of the SCA method applied.
+          enum:
+          - received
+          - psuIdentified
+          - psuAuthenticated
+          - scaMethodSelected
+          - started
+          - unconfirmed
+          - finalised
+          - failed
+          - exempted
+        psuMessage:
+          type: string
+          description: Text to be displayed to the PSU.
+        authorisationId:
+          type: string
+          description: Resource identification of the authorisation sub-resource.
+        _links:
+          $ref: '#/components/schemas/Xs2aAuthorisationRequestResponseLinks'
 externalDocs:
   description: Berlin Group XS2A Implementation Version 1.3
   url: https://docs.wixstatic.com/ugd/c2914b_bec5f9d0d3c94cfca2ad1b9da36dc752.pdf
