@@ -1,141 +1,25 @@
-generated: '2026-07-23'
+generated: '2026-09-23'
 method: generated
-source: openapi/triodos-bank-uk-auth-openapi.json, openapi/triodos-bank-uk-xs2a-openapi.json
+source: openapi/triodos-bank-uk-account-information-service-api-openapi.yml, openapi/triodos-bank-uk-authorization-endpoint-api-openapi.yml,
+  openapi/triodos-bank-uk-client-registration-endpoint-api-openapi.yml, openapi/triodos-bank-uk-configuration-endpoint-api-openapi.yml,
+  openapi/triodos-bank-uk-confirmation-of-funds-service-api-openapi.yml, openapi/triodos-bank-uk-extended-account-information-service-api-openapi.yml,
+  openapi/triodos-bank-uk-initial-access-token-service-api-openapi.yml, openapi/triodos-bank-uk-payment-initiation-service-api-openapi.yml,
+  openapi/triodos-bank-uk-token-endpoint-api-openapi.yml, openapi/triodos-bank-uk-userinfo-endpoint-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 101
   by_action_class:
-    connected: 51
-    acting: 50
+    connected: 52
+    acting: 49
   by_consequence:
-    read: 51
-    write: 13
-    safety-critical: 1
+    read: 52
+    write: 12
     physical: 36
+    safety-critical: 1
   human_in_the_loop_required: 1
 operations:
-- path: /{tenant}/v1/auth
-  method: get
-  operationId: authorizeGet
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v1/auth
-  method: post
-  operationId: authorizePost
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/.well-known/openid-configuration
-  method: get
-  operationId: configuration
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v1/registration
-  method: post
-  operationId: authorizePost_1
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v1/token
-  method: post
-  operationId: token
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v1/token/revoke
-  method: post
-  operationId: tokenRevocation
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /{tenant}/v1/userinfo
-  method: get
-  operationId: doGet
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v1/userinfo
-  method: post
-  operationId: doPost
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/onboarding/v1
-  method: get
-  operationId: initialAccessToken
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /{tenant}/v1/accounts/{account-id}
   method: get
   operationId: getAccount
@@ -179,6 +63,332 @@ operations:
 - path: /{tenant}/v1/accounts/{account-id}/transactions/page
   method: get
   operationId: getTransactionsPage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents/{resource-id}/authorisations
+  method: get
+  operationId: getAisAuthorisations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents/{resource-id}/authorisations
+  method: post
+  operationId: createAisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/consents/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getAisAuthorisationStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitAisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/consents/{resource-id}
+  method: get
+  operationId: getAisConsent
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents/{resource-id}
+  method: delete
+  operationId: deleteAisConsent
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/consents/{resource-id}/status
+  method: get
+  operationId: getAisConsentStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/consents
+  method: post
+  operationId: registerConsentRequest
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/auth
+  method: get
+  operationId: authorizeGet
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/auth
+  method: post
+  operationId: authorizePost
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v1/registration
+  method: post
+  operationId: authorizePost_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/.well-known/openid-configuration
+  method: get
+  operationId: configuration
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v1/funds-confirmations
+  method: post
+  operationId: confirmFundsAvailable
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations
+  method: get
+  operationId: getPiisAuthorisations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations
+  method: post
+  operationId: createPiisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations/{authorisation-id}
+  method: get
+  operationId: getPiisAuthorisationStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations/{authorisation-id}
+  method: put
+  operationId: submitPiisAuthorisation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}
+  method: get
+  operationId: getPiisConsent
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}
+  method: delete
+  operationId: deletePiisConsent
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/status
+  method: get
+  operationId: getPiisConsentStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/consents/confirmation-of-funds
+  method: post
+  operationId: registerConsentRequest_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{tenant}/v2/savings/{account-id}
+  method: get
+  operationId: getAccount_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/savings
+  method: get
+  operationId: getAccounts_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/savings/{account-id}/balances
+  method: get
+  operationId: getBalances_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/v2/savings/{account-id}/transactions
+  method: get
+  operationId: getTransactions_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{tenant}/onboarding/v1
+  method: get
+  operationId: initialAccessToken
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -338,126 +548,6 @@ operations:
       max-ttl: 300
       exchange: true
       purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v1/funds-confirmations
-  method: post
-  operationId: confirmFundsAvailable
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v1/consents/{resource-id}/authorisations
-  method: get
-  operationId: getAisAuthorisations
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v1/consents/{resource-id}/authorisations
-  method: post
-  operationId: createAisAuthorisation
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v1/consents/{resource-id}/authorisations/{authorisation-id}
-  method: get
-  operationId: getAisAuthorisationStatus
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v1/consents/{resource-id}/authorisations/{authorisation-id}
-  method: put
-  operationId: submitAisAuthorisation
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v1/consents/{resource-id}
-  method: get
-  operationId: getAisConsent
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v1/consents/{resource-id}
-  method: delete
-  operationId: deleteAisConsent
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v1/consents/{resource-id}/status
-  method: get
-  operationId: getAisConsentStatus
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v1/consents
-  method: post
-  operationId: registerConsentRequest
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
     escalation:
       human-in-the-loop: conditional
       triggers:
@@ -1254,19 +1344,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations
-  method: get
-  operationId: getPiisAuthorisations
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations
+- path: /{tenant}/v1/token
   method: post
-  operationId: createPiisAuthorisation
+  operationId: token
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1280,87 +1360,25 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations/{authorisation-id}
-  method: get
-  operationId: getPiisAuthorisationStatus
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/authorisations/{authorisation-id}
-  method: put
-  operationId: submitPiisAuthorisation
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}
-  method: get
-  operationId: getPiisConsent
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}
-  method: delete
-  operationId: deletePiisConsent
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /{tenant}/v2/consents/confirmation-of-funds/{resource-id}/status
-  method: get
-  operationId: getPiisConsentStatus
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v2/consents/confirmation-of-funds
+- path: /{tenant}/v1/token/revoke
   method: post
-  operationId: registerConsentRequest_1
+  operationId: tokenRevocation
   x-agentic-access:
     action-class: acting
-    consequence: write
+    consequence: safety-critical
     subject: required
     audience: null
     token:
-      max-ttl: 900
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
     escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
+      human-in-the-loop: required
     audit: required
-- path: /{tenant}/v2/savings/{account-id}
+- path: /{tenant}/v1/userinfo
   method: get
-  operationId: getAccount_1
+  operationId: doGet
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1368,29 +1386,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /{tenant}/v2/savings
-  method: get
-  operationId: getAccounts_1
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v2/savings/{account-id}/balances
-  method: get
-  operationId: getBalances_1
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /{tenant}/v2/savings/{account-id}/transactions
-  method: get
-  operationId: getTransactions_1
+- path: /{tenant}/v1/userinfo
+  method: post
+  operationId: doPost
   x-agentic-access:
     action-class: connected
     consequence: read
