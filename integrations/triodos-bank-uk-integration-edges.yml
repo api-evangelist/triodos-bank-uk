@@ -1,0 +1,16 @@
+generated: '2026-10-12'
+method: none
+source:
+- https://zapier.com/apps/triodos-bank-uk/integrations
+- https://n8n.io/integrations/triodos-bank-uk/
+- https://composio.dev/toolkits/triodos-bank-uk
+- https://monid.ai/tools/triodos-bank-uk
+checked:
+- https://composio.dev/toolkits/triodos-bank-uk
+- https://monid.ai/tools/triodos-bank-uk
+- https://n8n.io/integrations/triodos-bank-uk/
+- https://zapier.com/apps/triodos-bank-uk/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []
