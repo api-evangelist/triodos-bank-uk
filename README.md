@@ -1,4 +1,4 @@
-# Triodos Bank UK (triodos-bank-uk)
+# Triodos Bank UK
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,99 +64,137 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Triodos Bank UK Limited is a values-based, sustainability-focused bank headquartered in Bristol, England, and the UK arm of Triodos Bank N.V. (founded 1980, Netherlands), one of Europe's leading ethical banks. It is a certified B Corporation that lends only to organisations delivering positive social, environmental, and cultural impact, and is authorised by the Prudential Regulation Authority and regulated by the FCA and PRA (FRN 817008). As an FCA-authorised ASPSP, Triodos meets UK Open Banking / PSD2 obligations, but - unlike the CMA9 - it is a specialist lender that implements the Berlin Group NextGenPSD2 (XS2A) standard rather than the OBIE UK Read/Write standard, publishing a single developer platform at developer.triodos.com covering its UK, Netherlands, and Belgium account holders.
+Triodos Bank UK Limited is a values-based, sustainability-focused bank headquartered in Bristol, England, and the UK arm of Triodos Bank N.V. (founded 1980, Netherlands), one of Europe's leading ethical banks. Ownership of the parent sits with the SAAT foundation (Stichting Administratiekantoor Aandelen Triodos Bank), which issues depositary receipts rather than tradable shares, so Triodos is neither a conventional listed plc nor a customer mutual; it is a certified B Corporation that lends only to organisations delivering positive social, environmental, and cultural impact. Triodos Bank UK Ltd (company no. 11379025) is authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and PRA (FRN 817008). As an FCA-authorised ASPSP it meets UK Open Banking / PSD2 obligations, but - unlike the CMA9 - it is a specialist lender that implements the Berlin Group NextGenPSD2 (XS2A) standard rather than the OBIE UK Read/Write standard, publishing a single developer platform at developer.triodos.com covering its UK, Netherlands, and Belgium account holders. Its production XS2A APIs provide Account Information (AIS), Payment Initiation (PIS), and Confirmation of Funds (CoF) services, secured with OAuth2/OpenID Connect authorization, mutual-TLS client authentication, eIDAS/QWAC certificates, and PSD2 strong customer authentication, with a full sandbox for onboarding and testing.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/triodos-bank-uk/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/triodos-bank-uk/refs/heads/main/apis.yml)
+**Areas:** Financial Services · Banking · Open Banking · PSD2 · XS2A · Berlin Group · United Kingdom · Payments · Account Information · Confirmation of Funds · Ethical Banking · Sustainable Finance
 
-## Tags
+## Triodos Bank UK on APIs.io
 
-- Financial Services
-- Banking
-- Open Banking
-- PSD2
-- XS2A
-- Berlin Group
-- United Kingdom
-- Payments
-- Account Information
-- Confirmation of Funds
-- Ethical Banking
-- Sustainable Finance
-- Specialist Lender
+Everything profiled for Triodos Bank UK is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/triodos-bank-uk/](https://apis.io/providers/triodos-bank-uk/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (10)
 
-- **Created:** 2026-07-23
-- **Modified:** 2026-07-23
+- [Triodos Bank UK Account Information Service API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-account-information-service-api/) — This service may be used by an AISP to request information about the account of a PSU. The account is managed by the ASPSP providing the XS2A Interface.…
+- [Triodos Bank UK Authorization Endpoint API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-authorization-endpoint-api/) — The Authorization Endpoint performs authentication of the end-user.
+- [Triodos Bank UK Client Registration Endpoint API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-client-registration-endpoint-api/) — The Client Registration Endpoint performs registration of the client.
+- [Triodos Bank UK Configuration Endpoint API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-configuration-endpoint-api/) — The Configuration Endpoint provides configuration information about this OpenID service.
+- [Triodos Bank UK Confirmation of Funds Service API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-confirmation-of-funds-service-api/) — This service may be used by a PIISP to request a confirmation of the availability of specific funds on the account of a PSU. The account is managed by the…
+- [Triodos Bank UK Extended Account Information Service API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-extended-account-information-service-api/) — The Extended Account Information Service API from Triodos Bank UK — 4 operation(s) for extended account information service.
+- [Triodos Bank UK Initial Access Token Service API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-initial-access-token-service-api/) — The Initial Access Token Service API from Triodos Bank UK — 1 operation(s) for initial access token service.
+- [Triodos Bank UK Payment Initiation Service API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-payment-initiation-service-api/) — This service may be used by a PISP to initiate a single payment on behalf of a PSU using a given account of that PSU. The account is managed by the ASPSP…
+- [Triodos Bank UK Token Endpoint API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-token-endpoint-api/) — The Token Endpoint provides and revokes access tokens and refresh tokens.
+- [Triodos Bank UK UserInfo Endpoint API](https://apis.io/apis/triodos-bank-uk/triodos-bank-uk-userinfo-endpoint-api/) — The UserInfo Endpoint provides information about the authenticated end-user.
 
-## APIs
+### Published properties
 
-### Triodos Account Information Service (AIS) API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-The XS2A Account Information Service (AIS) - 13 operations for consented, secure read access to Triodos payment account details, balances, and transaction history under the Berlin Group NextGenPSD2 standard.
+#### MCP servers (1)
 
-- **Human URL:** [https://developer.triodos.com/docs/getting-started](https://developer.triodos.com/docs/getting-started)
-- **Base URL:** `https://api-ma.triodos.com/xs2a-bg`
+Model Context Protocol servers that expose the API to agents.
 
-#### Properties
+- [triodos-bank-uk-xs2a](https://apis.io/servers/triodos-bank-uk/triodos-bank-uk-xs2a/)
 
-- [OpenAPI](openapi/triodos-bank-uk-xs2a-openapi.json)
-- [Documentation](https://developer.triodos.com/docs/getting-started)
-- [API Reference](https://developer.triodos.com/reference)
+#### Agentic access (1)
 
-### Triodos Payment Initiation Service (PIS) API
+Which operations an agent can call, which act, and which need a human in the loop.
 
-The XS2A Payment Initiation Service (PIS) - 66 operations for initiating, authorising, and tracking SEPA, cross-border, UK domestic, and periodic (recurring) payments from Triodos accounts under the Berlin Group NextGenPSD2 standard.
+- [Triodos Bank Uk Agentic Access](https://apis.io/agentic-access/triodos-bank-uk/triodos-bank-uk-agentic-access/)
 
-- **Human URL:** [https://developer.triodos.com/docs/getting-started](https://developer.triodos.com/docs/getting-started)
-- **Base URL:** `https://api-ma.triodos.com/xs2a-bg`
+#### Collections (2)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [OpenAPI](openapi/triodos-bank-uk-xs2a-openapi.json)
-- [Documentation](https://developer.triodos.com/docs/getting-started)
-- [API Reference](https://developer.triodos.com/reference)
+- [Triodos Auth service](https://apis.io/collections/triodos-bank-uk/open-triodos-bank-uk-auth/)
+- [Triodos XS2A BG service](https://apis.io/collections/triodos-bank-uk/open-triodos-bank-uk-xs2a/)
 
-### Triodos Confirmation of Funds Service (CoF) API
+#### Overlays (2)
 
-The XS2A Confirmation of Funds Service (CoF/CBPII) - 9 operations for card-based payment instrument issuers to check the availability of funds on a Triodos account under the Berlin Group NextGenPSD2 standard.
+OpenAPI overlays, including conversational phrasing for each operation.
 
-- **Human URL:** [https://developer.triodos.com/docs/getting-started](https://developer.triodos.com/docs/getting-started)
-- **Base URL:** `https://api-ma.triodos.com/xs2a-bg`
+- [Triodos Bank Uk Auth Overlay](https://apis.io/overlays/triodos-bank-uk/triodos-bank-uk-auth-overlay/)
+- [Triodos Bank Uk Xs2A Overlay](https://apis.io/overlays/triodos-bank-uk/triodos-bank-uk-xs2a-overlay/)
 
-#### Properties
+#### Security (3)
 
-- [OpenAPI](openapi/triodos-bank-uk-xs2a-openapi.json)
-- [Documentation](https://developer.triodos.com/docs/getting-started)
-- [API Reference](https://developer.triodos.com/reference)
+Authentication, trust centre, and vulnerability disclosure.
 
-### Triodos XS2A Authorization (OAuth2/OIDC) API
+- [Triodos Bank Uk Authentication](https://apis.io/security/triodos-bank-uk/triodos-bank-uk-authentication/)
+- [Triodos Bank Uk Domain Security](https://apis.io/security/triodos-bank-uk/triodos-bank-uk-domain-security/)
+- [Triodos Bank Uk Vulnerability Disclosure](https://apis.io/security/triodos-bank-uk/triodos-bank-uk-vulnerability-disclosure/)
 
-The Triodos Auth service - 8 operations implementing OAuth2 / OpenID Connect for XS2A third-party providers, including dynamic client registration, OpenID configuration discovery, authorization, token issuance and revocation, and UserInfo.
+#### OAuth scopes (1)
 
-- **Human URL:** [https://developer.triodos.com/docs/getting-started](https://developer.triodos.com/docs/getting-started)
-- **Base URL:** `https://api.triodos.com/auth`
+The permissions the API asks for.
 
-#### Properties
+- [Triodos Bank Uk Scopes](https://apis.io/scopes/triodos-bank-uk/triodos-bank-uk-scopes/)
 
-- [OpenAPI](openapi/triodos-bank-uk-auth-openapi.json)
-- [Documentation](https://developer.triodos.com/docs/getting-started)
-- [API Reference](https://developer.triodos.com/reference)
+## Where to find this API
 
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.triodos.co.uk/)
-- [Developer Portal](https://developer.triodos.com/)
 - [Documentation](https://developer.triodos.com/docs/getting-started)
-- [Open Banking for Developers](https://www.triodos.co.uk/open-banking-developers)
-- [Changelog](https://developer.triodos.com/changelog)
+- [Getting started](https://developer.triodos.com/docs/getting-started)
+- [API reference](https://developer.triodos.com/reference)
+- [Sign up](https://developer.triodos.com/docs/registration)
 - [Support](https://developer.triodos.com/docs/support)
+- [Changelog](https://developer.triodos.com/changelog)
 - [Blog](https://www.triodos.co.uk/blog)
-- [LinkedIn](https://www.linkedin.com/company/triodos-bank)
-- [Privacy Statement](https://www.triodos.co.uk/privacy-statement)
-- [llms.txt](https://developer.triodos.com/llms.txt)
+- [Compliance](https://www.triodos.co.uk/open-banking-developers)
+- [Privacy policy](https://www.triodos.co.uk/privacy-statement)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 41.2** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 43.9 |
+| Contract governance | 4.5 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 49.4 |
+| Access clarity | 25.0 |
+
+**Agent readiness 28.3** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | — |
+
+**Regulatory alignment 59.1** — Banking & Open Finance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/triodos-bank-uk/](https://apis.io/providers/triodos-bank-uk/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Triodos Bank UK: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/triodos-bank-uk/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
